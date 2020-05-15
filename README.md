@@ -1,6 +1,8 @@
 ![PlanBase Cover](https://user-images.githubusercontent.com/65351463/82055451-69b77100-96b8-11ea-9ee6-ccaf2d4cacae.JPG)
 # PlanBase
 
+PlanBase is a project under [The Mayor of London's Civic Innovation Challenge](https://www.london.gov.uk/challenge), which looks at how we can use data and technology to democratise planning, and ensure we can tackle the housing crisis facing Londoners.
+
 ## Description
 Through our continuous engagement with GLA, the CIC partners as well as our own research with residents and multiple planning professionals, we have identified and addressed the biggest barriers to participation during community engagement are as follows:
 * A lack of proper understanding of the proposals by often poorly informed yet information overloaded public;
