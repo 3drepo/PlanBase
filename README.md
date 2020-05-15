@@ -16,7 +16,7 @@ The main features of our solution are, user-friendly, open sourced and totally f
 
 What we’ve built so far. For this pilot, we have stripped down the engineering complexity from our BIM platform to deliver a clean and simple to user interface that anyone without prior experience can engage with.
 
-As shown in Figs. 1 to 3, the user journey has been mapped and tested using the Thamesmead and Abbey Wood Opportunity Area as a case study.
+As shown in the below screenshots, the user journey has been mapped and tested using the Thamesmead and Abbey Wood Opportunity Area as a case study.
 
 ![Planning Overview](https://user-images.githubusercontent.com/65351463/82059680-48598380-96be-11ea-8728-da6cc63e81b9.JPG)
 
