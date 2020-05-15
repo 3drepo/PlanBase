@@ -8,7 +8,7 @@ Through our continuous engagement with GLA, the CIC partners as well as our own 
 * The helpless feeling of not being listened to leading towards opposition;
 * The need for a narrative.
 
-To address these problems, we designed PlanBase, an open source 3D planning portal based on the award-wining 3D Repo Dig¬ital Construction Platform in the cloud: https://3drepo.com. There, residents and planners alike can review the proposals in 3D and comment on them where it matters the most. Same as with interactive 2D Geographical Information System (GIS) interfaces, in PlanBase, the users can drop pins based on a specific topic and pro¬vide feedback directly in 3D. This removes the need for residents to email responses back and for planners to collate and analyse them manually.
+To address these problems, we designed PlanBase, an open source 3D planning portal based on the award-wining 3D Repo Digital Construction Platform in the cloud: https://3drepo.com. There, residents and planners alike can review the proposals in 3D and comment on them where it matters the most. Same as with interactive 2D Geographical Information System (GIS) interfaces, in PlanBase, the users can drop pins based on a specific topic and pro¬vide feedback directly in 3D. This removes the need for residents to email responses back and for planners to collate and analyse them manually.
 
 The main features of our solution are, user-friendly, open sourced and totally free, stand-alone as well as embeddable, and AEC ready.
 
