@@ -7,8 +7,13 @@ type TdrIssue = {
 	resources: TdrResource[];
 	topic_type: string;
 	status: string;
-	position: number[];
-	look_at: number[];
+	thumbnail: string;
+	viewpoint: {
+		position: number[];
+		look_at: number[];
+		up: number[];
+		view_dir: number[];
+	};
 };
 
 type TdrResource = {
@@ -17,11 +22,17 @@ type TdrResource = {
 };
 
 type WalkthroughPoint = {
+	id: string;
 	title: string;
 	bodyText: string;
 	type: 'Narrative' | 'AgreementScale' | 'Freetext';
-	position: number[];
-	lookAt: number[];
+	thumbnailUrl: string;
+	viewpoint: {
+		position: number[];
+		lookAt: number[];
+		up: number[];
+		viewDir: number[];
+	};
 };
 
 type ProjectOverview = {

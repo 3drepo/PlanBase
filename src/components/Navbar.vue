@@ -5,6 +5,10 @@
 		</router-link>
 		<div class="pb-nav-body">
 			<span class="pl-3 text-xl">{{ overview.title }}</span>
+			<v-spacer></v-spacer>
+			<v-btn class="tdr-load-btn" small color="primary" v-if="!tdrLoaded" @click="loadTdr">Load 3DRepo</v-btn>
+			<v-switch v-model="_highContrast" color="primary" class="contrast-switch"></v-switch>
+			<v-icon>{{ _highContrast ? 'mdi-brightness-7' : 'mdi-brightness-5' }}</v-icon>
 		</div>
 		<router-link to="/">
 			<img alt="Planbase Logo" class="pb-logo" src="../assets/images/planbase_logo.png" />
@@ -18,15 +22,37 @@ import { mapGetters } from 'vuex';
 
 export default Vue.extend({
 	name: 'Navbar',
+	data: function() {
+		return {
+			tdrLoaded: false,
+		};
+	},
 
 	computed: {
-		...mapGetters(['overview']),
+		...mapGetters(['overview', 'highContrast']),
+
+		_highContrast: {
+			get() {
+				return this.highContrast;
+			},
+
+			set() {
+				this.$store.commit('toggleHighContrast');
+			},
+		},
+	},
+	methods: {
+		loadTdr: function() {
+			(this as any).tdrLoaded = true;
+			(window as any).initialiseViewer();
+		},
 	},
 });
 </script>
 
 <style lang="scss" scoped>
 .pb-navbar {
+	pointer-events: all;
 	width: 100%;
 	background: white;
 	display: flex;
@@ -53,5 +79,21 @@ export default Vue.extend({
 	align-self: center;
 	padding: 1rem;
 	padding-top: 22px;
+}
+</style>
+
+<style lang="scss">
+.tdr-load-btn {
+	margin: 0 10px;
+}
+.contrast-switch {
+	padding: 0 !important;
+	margin: 0 !important;
+	.v-input__slot {
+		margin: 0;
+	}
+	.v-messages {
+		display: none;
+	}
 }
 </style>

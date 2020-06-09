@@ -1,136 +1,34 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+// 3dRepo API
+import ApiManager from '../libs/tdr/api-manager';
+import ApiClient from '../libs/tdr/api-client';
+let apiManager = new ApiManager('PlanBase', '353a00c0-9918-11ea-bb8a-7339f221efad');
+let apiClient = new ApiClient('');
+
 Vue.use(Vuex);
 
-import { format } from 'date-fns';
+import { format, isWithinInterval } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
 export default new Vuex.Store({
 	state: {
+		highContrast: false,
+
 		user: {
 			email: null,
 			postcode: null,
 		},
 
 		overview: {
-			title: 'Royal Victoria Docks Community Engagement Portal',
-			bodyText:
-				'The Royal Docks is embarking on an exciting new chapter, with over £8bn being invested in the area over the next 20 years. Here’s the full story on how the Royal Docks offers a different way to live, work, and invest in London.\n\nNewham’s population is one of the area’s greatest assets. The Royal Docks team is working closely with Newham Council to ensure that regeneration improves education, employment and business opportunity for existing residents.',
-			logoUrl: 'https://api3.www.3drepo.io/api/PlanBase/19a3ef10-83d8-11ea-81c9-931a0b2034c3/resources/17d37f30-9e8f-11ea-bb8a-7339f221efad',
-			backgroundUrl: 'https://api3.www.3drepo.io/api/PlanBase/19a3ef10-83d8-11ea-81c9-931a0b2034c3/resources/17d37f31-9e8f-11ea-bb8a-7339f221efad',
+			title: '',
+			bodyText: '',
+			logoUrl: '',
+			backgroundUrl: '',
 		} as Overview,
 
-		questions: [
-			{
-				id: 'q1',
-				label: 'Bollards',
-				text: 'Are the bollards in the correct location to ensure the safety of pedestrians?',
-				rating: null,
-				comment: null,
-				type: 'question',
-				narrative: {
-					image: 'https://picsum.photos/900/300',
-					comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id euismod nisl, id ultrices tellus. Mauris scelerisque tempus turpis sed luctus.',
-				},
-			},
-			{
-				id: 'q2',
-				label: 'Town Hall',
-				text: 'It this the right location for the Town Hall?',
-				rating: null,
-				comment: null,
-				type: 'question',
-			},
-			{
-				id: 'q3',
-				label: 'Dry Docks',
-				text: 'Would you expect boats to be docked here at any time?',
-				rating: null,
-				comment: null,
-				type: 'bookmark',
-				narrative: {
-					image: 'https://picsum.photos/1200/400',
-					comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id euismod nisl, id ultrices tellus. Mauris scelerisque tempus turpis sed luctus.',
-				},
-			},
-			{
-				id: 'q4',
-				label: 'Car Parks',
-				text: 'Are the traffic calming measures appropriate for this car park?',
-				rating: null,
-				comment: null,
-				type: 'question',
-			},
-			{
-				id: 'q5',
-				label: 'Cycle Lane',
-				text: 'Do you agree that these cycling lanes are located in the best place for motor users?',
-				rating: null,
-				comment: null,
-				type: 'question',
-			},
-			{
-				id: 'q6',
-				label: 'Astro Pitch',
-				text: 'Do you foresee this astro pitch being used on a regular basis?',
-				rating: null,
-				comment: null,
-				type: 'bookmark',
-			},
-			{
-				id: 'q7',
-				label: 'Retail Park',
-				text: 'Are the retail areas sufficienct for this area of town?',
-				rating: null,
-				comment: null,
-				type: 'question',
-				narrative: {
-					image: 'https://picsum.photos/1000/300',
-					comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id euismod nisl, id ultrices tellus. Mauris scelerisque tempus turpis sed luctus.',
-				},
-			},
-			{
-				id: 'q8',
-				label: 'Zebra Crossing',
-				text: 'Will the presence of a Zebra crossing be good for the community?',
-				rating: null,
-				comment: null,
-				type: 'question',
-			},
-			{
-				id: 'q9',
-				label: 'Central Park',
-				text: 'Is the central park to your liking?',
-				rating: null,
-				comment: null,
-				type: 'question',
-			},
-			{
-				id: 'q10',
-				label: 'Swimming Pool',
-				text: 'Will you be using the swimming pool a great deal?',
-				rating: null,
-				comment: null,
-				type: 'bookmark',
-			},
-			{
-				id: 'q11',
-				label: 'Underground',
-				text: 'Do you agree that the underground station is a critical facility for this community?',
-				rating: null,
-				comment: null,
-				type: 'question',
-			},
-			{
-				id: 'q12',
-				label: 'Bus Station',
-				text: 'Do you agree that the bus station is a critical facility for this community?',
-				rating: null,
-				comment: null,
-				type: 'question',
-			},
-		] as Question[],
+		questions: [] as Question[],
 
 		pins: [
 			{
@@ -148,6 +46,8 @@ export default new Vuex.Store({
 				createdAt: '2020/03/22',
 			},
 		] as Pin[],
+
+		walkthroughPoints: [] as WalkthroughPoint[],
 
 		pinComments: [
 			{
@@ -197,12 +97,20 @@ export default new Vuex.Store({
 	},
 
 	getters: {
+		highContrast(state: any) {
+			return state.highContrast;
+		},
+
 		user(state: any) {
 			return state.user;
 		},
 
 		overview(state: any) {
 			return state.overview;
+		},
+
+		walkthroughPoints(state: any) {
+			return state.walkthroughPoints;
 		},
 
 		questions(state: any) {
@@ -219,8 +127,19 @@ export default new Vuex.Store({
 	},
 
 	mutations: {
+		toggleHighContrast(state: any) {
+			state.highContrast = !state.highContrast;
+		},
+
+		setOverview(state: any, overview: Overview) {
+			state.overview = overview;
+		},
+
+		setQuestions(state: any, questions: Question[]) {
+			state.questions = questions;
+		},
+
 		setUser(state: any, { email, postcode }: any) {
-			// console.log('Store: setUser');
 			state.user.email = email;
 			state.user.postcode = postcode;
 		},
@@ -235,6 +154,33 @@ export default new Vuex.Store({
 	},
 
 	actions: {
+		async init({ commit }: any) {
+			const res: any = await Promise.all([apiManager.getProjectOverview(), apiManager.getWalkthroughPoints()]).catch(err => {
+				console.error(err);
+				return;
+			});
+
+			const questions = res[1].map((w: WalkthroughPoint) => {
+				return {
+					id: w.id,
+					title: w.title,
+					bodyText: w.bodyText,
+					type: w.type,
+					thumbnailUrl: 'https://api3.www.3drepo.io/api/' + w.thumbnailUrl,
+					viewpoint: w.viewpoint,
+					narrative: {
+						image: 'https://api3.www.3drepo.io/api/' + w.thumbnailUrl,
+						comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id euismod nisl, id ultrices tellus. Mauris scelerisque tempus turpis sed luctus.',
+					},
+					comment: null,
+					rating: null,
+				} as Question;
+			});
+
+			commit('setOverview', res[0]);
+			commit('setQuestions', questions);
+		},
+
 		async createPin({ commit, state }: any, { category, text, x, y }: any) {
 			const pin: Pin = {
 				id: uuidv4(),

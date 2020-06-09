@@ -4,33 +4,29 @@
 		<div class="flex relative pb-card-header">
 			<div class="px-6 py-3 flex-1 flex items-center">
 				<v-icon class="pr-3">place</v-icon>
-				<h4>{{ selectedQuestion.label }}</h4>
+				<h4>{{ selectedQuestion.title }}</h4>
 			</div>
 			<div
 				v-show="questionIndex > 0"
 				class="flex justify-center items-center pb-previous"
+				:class="highContrast ? 'pb-previous-hc' : 'pb-previous'"
 				@click="$emit('previousQuestion')"
 			>
 				<v-icon>keyboard_arrow_left</v-icon>
 			</div>
-			<div class="flex justify-center items-center pb-next" @click="$emit('nextQuestion')">
+			<div class="flex justify-center items-center" :class="highContrast ? 'pb-next-hc' : 'pb-next'" @click="$emit('nextQuestion')">
 				<v-icon>keyboard_arrow_right</v-icon>
 			</div>
 		</div>
 
 		<!-- Question or Bookmark -->
 		<div class="px-6 py-3 pb-2 relative pb-card-section-question">
-			<h5 v-if="selectedQuestion.type === 'question'" class="pb-2">
-				Question {{ questionIndex + 1 }}
-			</h5>
+			<h5 v-if="selectedQuestion.type === 'AgreementScale'" class="pb-2">Question {{ questionIndex + 1 }}</h5>
 			<h5 v-else class="pb-2">Bookmark {{ questionIndex + 1 }}</h5>
 
 			<!-- Image -->
 			<!-- <img :src="image" alt="question-image" /> -->
-			<div
-				class="question-image"
-				:style="{ background: 'center / cover no-repeat url(' + image + ')' }"
-			></div>
+			<div class="question-image" :style="{ background: 'center / cover no-repeat url(' + image + ')' }"></div>
 
 			<!-- Expand -->
 			<div @click="toggleImage" class="absolute expand-button">
@@ -38,11 +34,7 @@
 			</div>
 
 			<!-- Expanded Image -->
-			<div
-				v-if="imageExpanded"
-				class="absolute shadow expanded-image"
-				:style="{ background: 'center / cover no-repeat url(' + image + ')' }"
-			>
+			<div v-if="imageExpanded" class="absolute shadow expanded-image" :style="{ background: 'center / cover no-repeat url(' + image + ')' }">
 				<div class="relative shadow narrative">
 					<div v-if="narrative">
 						<p>{{ narrative.comment }}</p>
@@ -60,19 +52,15 @@
 			</div>
 
 			<p class="font-bold">
-				{{ selectedQuestion.text }}
+				{{ selectedQuestion.bodyText }}
 			</p>
 		</div>
 
 		<!-- Rating -->
-		<div v-if="selectedQuestion.type === 'question'" class="px-6 py-3 pb-card-question-rating">
+		<div v-if="selectedQuestion.type === 'AgreementScale'" class="px-6 py-3 pb-card-question-rating">
 			<p>Do you agree or disagree?</p>
 			<div class="flex justify-between pb-3 rating-options">
-				<div
-					@click="handleRating(1)"
-					class="flex-1 flex flex-col rating-item-group"
-					:class="rating && rating !== 1 ? 'opacity-25' : ''"
-				>
+				<div @click="handleRating(1)" class="flex-1 flex flex-col rating-item-group" :class="rating && rating !== 1 ? 'opacity-25' : ''">
 					<span class="flex-1 pb-2 rating-item-text">
 						Strongly Disagree
 					</span>
@@ -80,11 +68,7 @@
 						<span>1</span>
 					</div>
 				</div>
-				<div
-					@click="handleRating(2)"
-					class="flex-1 flex flex-col rating-item-group"
-					:class="rating && rating !== 2 ? 'opacity-25' : ''"
-				>
+				<div @click="handleRating(2)" class="flex-1 flex flex-col rating-item-group" :class="rating && rating !== 2 ? 'opacity-25' : ''">
 					<span class="flex-1 pb-2 rating-item-text">
 						Disagree
 					</span>
@@ -92,11 +76,7 @@
 						<span>2</span>
 					</div>
 				</div>
-				<div
-					@click="handleRating(3)"
-					class="flex-1 flex flex-col rating-item-group"
-					:class="rating && rating !== 3 ? 'opacity-25' : ''"
-				>
+				<div @click="handleRating(3)" class="flex-1 flex flex-col rating-item-group" :class="rating && rating !== 3 ? 'opacity-25' : ''">
 					<span class="flex-1 pb-2 rating-item-text">
 						Undecided
 					</span>
@@ -104,11 +84,7 @@
 						<span>3</span>
 					</div>
 				</div>
-				<div
-					@click="handleRating(4)"
-					class="flex-1 flex flex-col rating-item-group"
-					:class="rating && rating !== 4 ? 'opacity-25' : ''"
-				>
+				<div @click="handleRating(4)" class="flex-1 flex flex-col rating-item-group" :class="rating && rating !== 4 ? 'opacity-25' : ''">
 					<span class="flex-1 pb-2 rating-item-text">
 						Agree
 					</span>
@@ -116,11 +92,7 @@
 						<span>4</span>
 					</div>
 				</div>
-				<div
-					@click="handleRating(5)"
-					class="flex-1 flex flex-col rating-item-group"
-					:class="rating && rating !== 5 ? 'opacity-25' : ''"
-				>
+				<div @click="handleRating(5)" class="flex-1 flex flex-col rating-item-group" :class="rating && rating !== 5 ? 'opacity-25' : ''">
 					<span class="flex-1 pb-2 rating-item-text">
 						Strongly Agree
 					</span>
@@ -132,18 +104,9 @@
 		</div>
 
 		<!-- Comment -->
-		<div v-if="selectedQuestion.type === 'question'" class="px-6 py-3 pb-card-question-comment">
-			<label for="comment-text-area" class="text-xs uppercase"
-				>Please add a comment to support your choice</label
-			>
-			<v-textarea
-				outlined
-				id="comment-text-area"
-				name="comment-text-area"
-				placeholder="e.g. They are far enough from the water's edge"
-				v-model="comment"
-				class="mt-2"
-			></v-textarea>
+		<div v-if="selectedQuestion.type === 'AgreementScale' && rating" class="px-6 py-3 pb-card-question-comment">
+			<label for="comment-text-area" class="text-xs uppercase">Please add a comment to support your choice</label>
+			<v-textarea outlined id="comment-text-area" name="comment-text-area" placeholder="e.g. They are far enough from the water's edge" v-model="comment" class="mt-2"></v-textarea>
 		</div>
 
 		<!-- Button Bar -->
@@ -156,6 +119,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
 
 export default Vue.extend({
 	name: 'Question',
@@ -174,6 +138,8 @@ export default Vue.extend({
 	}),
 
 	computed: {
+		...mapGetters(['highContrast']),
+
 		narrative() {
 			if (!this.selectedQuestion || !this.selectedQuestion.narrative) return null;
 			else return this.selectedQuestion.narrative;
@@ -198,7 +164,9 @@ export default Vue.extend({
 	},
 
 	watch: {
-		selectedQuestion(newVal) {
+		selectedQuestion(newVal: WalkthroughPoint) {
+			(window as any).UnityUtil.setViewpoint(newVal.viewpoint.position, newVal.viewpoint.up, newVal.viewpoint.viewDir, newVal.viewpoint.lookAt);
+
 			this.rating = null;
 			this.comment = '';
 		},
@@ -208,6 +176,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .pb-question-card {
+	pointer-events: all;
 	width: 400px;
 	margin-left: 180px;
 	border-radius: 1px;
@@ -230,6 +199,22 @@ export default Vue.extend({
 			}
 			.v-icon {
 				font-size: 36px;
+			}
+		}
+
+		.pb-next-hc,
+		.pb-previous-hc {
+			width: 40px;
+			background: #000;
+			flex: 0;
+			min-width: 48px;
+			cursor: pointer;
+			&:hover {
+				background: #c50202;
+			}
+			.v-icon {
+				font-size: 36px;
+				color: #fff;
 			}
 		}
 	}

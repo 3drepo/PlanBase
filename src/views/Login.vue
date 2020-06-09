@@ -1,11 +1,12 @@
 <template>
-	<div class="login-container">
+	<div class="login-container" :style="'background-image:url(\'' + overview.backgroundUrl + '\');'">
 		<Login />
 	</div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
 
 // Components
 import Login from '@/components/Login.vue';
@@ -15,6 +16,10 @@ export default Vue.extend({
 
 	components: {
 		Login,
+	},
+
+	computed: {
+		...mapGetters(['overview']),
 	},
 
 	beforeMount() {
@@ -28,9 +33,9 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .login-container {
+	pointer-events: all;
 	height: 100%;
 	width: 100%;
-	background-image: url('../assets/images/login_bg.jpg');
 	background-size: cover;
 	background-position: center;
 	display: flex;

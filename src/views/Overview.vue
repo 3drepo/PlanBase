@@ -48,6 +48,7 @@ export default {
 
 <style lang="scss" scoped>
 .pb-overview-container {
+	pointer-events: all;
 	height: 100%;
 	width: 100%;
 	background-image: url('../assets/images/3drepo_bg.jpg');

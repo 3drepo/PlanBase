@@ -25,11 +25,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
 
 export default Vue.extend({
 	name: 'ProgressBar',
 
 	computed: {
+		...mapGetters(['highContrast']),
+
 		stage() {
 			const url = this.$route.name;
 			return url;
@@ -58,6 +61,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .pb-progress-bar {
+	pointer-events: all;
 	background: white;
 	display: flex;
 	justify-content: space-between;

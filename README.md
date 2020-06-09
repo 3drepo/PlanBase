@@ -1,48 +1,98 @@
-![PlanBase Cover](https://user-images.githubusercontent.com/65351463/82055451-69b77100-96b8-11ea-9ee6-ccaf2d4cacae.JPG)
-# PlanBase
+# Planbase
 
-PlanBase is a project under [The Mayor of London's Civic Innovation Challenge](https://www.london.gov.uk/challenge), which looks at how we can use data and technology to democratise planning, and ensure we can tackle the housing crisis facing Londoners.
+## Getting Started
 
-## Description
-Through our continuous engagement with GLA, the CIC partners as well as our own research with residents and multiple planning professionals, we have identified and addressed the biggest barriers to participation during community engagement are as follows:
-* A lack of proper understanding of the proposals by often poorly informed yet information overloaded public;
-* The inability to reach across all groups of people;
-* The helpless feeling of not being listened to leading towards opposition;
-* The need for a narrative.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-To address these problems, we designed PlanBase, an open source 3D planning portal based on the award-wining 3D Repo Digital Construction Platform in the cloud: https://3drepo.com. There, residents and planners alike can review the proposals in 3D and comment on them where it matters the most. Same as with interactive 2D Geographical Information System (GIS) interfaces, in PlanBase, the users can drop pins based on a specific topic and pro¬vide feedback directly in 3D. This removes the need for residents to email responses back and for planners to collate and analyse them manually.
+### Prerequisites
 
-The main features of our solution are, user-friendly, open sourced and totally free, stand-alone as well as embeddable, and AEC ready.
+What things you need to install the software and how to install them
 
-What we’ve built so far. For this pilot, we have stripped down the engineering complexity from our BIM platform to deliver a clean and simple to user interface that anyone without prior experience can engage with.
+### Project setup
 
-As shown in the below screenshots, the user journey has been mapped and tested using the Thamesmead and Abbey Wood Opportunity Area as a case study.
+```
+yarn install
+```
 
-![Planning Overview](https://user-images.githubusercontent.com/65351463/82059680-48598380-96be-11ea-8728-da6cc63e81b9.JPG)
+### Compiles and hot-reloads for development
 
-This interactive prototype provides the means to test user interaction, preview relevant project information and collect feedback by dropping pins based on specific topics of interest. Our key objective is to increase engagement and interactivity while reducing unnecessary clutter.
+```
+yarn serve
+```
 
-![Planning Response](https://user-images.githubusercontent.com/65351463/82059780-6a530600-96be-11ea-8611-8d0374a6ce11.JPG)
+### Typescript Test Compiler
 
-Upon zooming in, users can recognise clusters of comments that highlight increased activity. They can also navigate to areas of interest using pre-defined views on the left-hand side.
+From root directory
 
-![PlanBase Cover](https://user-images.githubusercontent.com/65351463/82055451-69b77100-96b8-11ea-9ee6-ccaf2d4cacae.JPG)
+```
+ts-node --files src/libs/tdr/main.ts
+```
 
-PlanBase street-level provides unprecedented amount of detail. Users can post new comments or up or down-vote the existing ones. These are then automatically processed using PowerBI for automated business intelligence, data aggregation, and statistics in the form of a live dashboard for planners.
+### Compiles and minifies for production
 
-During the CIC pilot, we will develop and deploy the open source PlanBase portal on top of the 3D Repo cloud back-end that will be totally free to use for everyone.
+```
+yarn build
+```
 
-## Outcomes
+### Customize configuration
 
-Local communities will have a better understanding of the planning proposals and the wider narrative within the context of the whole city including public transport. On top of this, they will be able to give specific feedback with relative ease.
+See [Configuration Reference](https://cli.vuejs.org/config/).
 
-GLA and local councils will have better engagement with local communities, better analysis and data mining, as well as fulfilment of the National Digital Twin Programme requirement.
+End with an example of getting some data out of the system or using it for a little demo
 
-Developers will be able to better communicate proposals and more easily gather feedback on them. They will also benefit from faster iteration of changes.
+## Storybook
 
-## Project Partners
+### Run Storybook
 
-* [Greater London Authority](https://www.london.gov.uk/)
-* [Social Tech Trust](https://socialtechtrust.org/)
-* [Microsoft](https://www.microsoft.com/)
-* [Talk London](https://www.london.gov.uk/talk-london/)
+```
+yarn storybook,
+```
+
+### Build stand alone Storybook
+
+```
+build-storybook
+```
+
+## Running the tests
+
+### Run your unit tests
+
+```
+yarn test:unit
+```
+
+### Run your end-to-end tests
+
+```
+yarn test:e2e
+```
+
+### Lints and fixes files
+
+```
+yarn lint
+```
+
+## Deployment
+
+Add additional notes about how to deploy this on a live system
+
+## Built With
+
+- [VueJS](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+- [Vuetify](https://maven.apache.org/) - Dependency Management
+- [Vuex](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+- [Storybook](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+
+## Contributing
+
+## Versioning
+
+## Authors
+
+- **Chris Baker** - [PhaseZero](https://www.phaseze.ro)
+
+## License
+
+## Acknowledgments

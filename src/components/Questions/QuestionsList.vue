@@ -8,14 +8,10 @@
 			@click="selectQuestion(qIndex)"
 		>
 			<div class="rounded-full pb-pill">
-				<v-icon v-if="question.type === 'question'">mdi-chat-processing-outline</v-icon>
+				<v-icon v-if="question.type === 'AgreementScale'">mdi-chat-processing-outline</v-icon>
 				<v-icon v-else>mdi-bookmark</v-icon>
 			</div>
-			<span
-				class="pb-question-label"
-				:class="selectedQuestion.id == question.id ? 'text-white' : ''"
-				>{{ question.label }}</span
-			>
+			<span class="pb-question-title" :class="selectedQuestion.id == question.id ? 'text-white' : ''">{{ question.title }}</span>
 		</div>
 	</div>
 </template>
@@ -67,6 +63,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .pb-questions-list-container {
+	pointer-events: all;
 	font-family: Roboto, sans-serif;
 	position: absolute;
 	top: 24px;
@@ -99,7 +96,7 @@ export default Vue.extend({
 			}
 		}
 
-		.pb-question-label {
+		.pb-question-title {
 			font-size: 12px;
 			line-height: 16px;
 			text-align: left;

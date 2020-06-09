@@ -36,23 +36,15 @@ export default class ApiClient {
 	}
 
 	getIssues(teamspaceId: string, modelId: string): Promise<TdrIssue[]> {
-		return axios
-			.get(baseURLv3 + '/' + teamspaceId + '/' + modelId + '/issues?key=' + this.apiKey, {
-				withCredentials: true,
-			})
-			.then(res => {
-				return res.data;
-			});
+		return axios.get(baseURLv3 + '/' + teamspaceId + '/' + modelId + '/issues?key=' + this.apiKey).then(res => {
+			return res.data.filter((i: any) => i.status === 'open');
+		});
 	}
 
 	getIssue(teamspaceId: string, modelId: string, issueId: string): Promise<TdrIssue> {
-		return axios
-			.get(baseURLv3 + '/' + teamspaceId + '/' + modelId + '/issues/' + issueId + '?key=' + this.apiKey, {
-				withCredentials: true,
-			})
-			.then(res => {
-				return res.data;
-			});
+		return axios.get(baseURLv3 + '/' + teamspaceId + '/' + modelId + '/issues/' + issueId + '?key=' + this.apiKey).then(res => {
+			return res.data;
+		});
 	}
 
 	closeIssue(teamspaceId: string, modelId: string, issue: { rev_id: string; _id: string }) {

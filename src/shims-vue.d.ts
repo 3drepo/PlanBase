@@ -8,14 +8,15 @@ interface User {
 	postcode: string | null;
 }
 
-interface Question {
-	id: string;
-	label: string;
-	text: string;
+interface Question extends WalkthroughPoint {
+	// id: string;
+	// title: string;
+	// bodyText: string;
+	// type: 'AgreementScale' | 'Narrative' | null;
+	// thumbnail: string;
+	// viewpoint: { position: number[]; lookAt: number[] };
 	rating: null | number;
 	comment: null | string;
-	type: 'question' | 'bookmark' | null;
-	image?: string;
 }
 
 interface Pin {

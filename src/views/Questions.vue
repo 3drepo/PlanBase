@@ -8,13 +8,7 @@
 			@previousQuestion="previousQuestion"
 			@nextQuestion="nextQuestion"
 		/>
-		<Question
-			:questions="questions"
-			:selectedQuestion="selectedQuestion"
-			:questionIndex="questionIndex"
-			@previousQuestion="previousQuestion"
-			@nextQuestion="nextQuestion"
-		/>
+		<Question :questions="questions" :selectedQuestion="selectedQuestion" :questionIndex="questionIndex" @previousQuestion="previousQuestion" @nextQuestion="nextQuestion" />
 	</div>
 </template>
 
@@ -32,14 +26,7 @@ export default {
 	},
 
 	data: () => ({
-		selectedQuestion: {
-			id: '',
-			label: '',
-			text: '',
-			rating: null,
-			comment: '',
-			type: null,
-		} as Question,
+		selectedQuestion: {} as Question,
 	}),
 
 	computed: {
@@ -89,9 +76,6 @@ export default {
 .pb-questions-container {
 	height: 100%;
 	width: 100%;
-	background-image: url('../assets/images/3drepo_bg.jpg');
-	background-size: cover;
-	background-position: center;
 	padding-top: 24px;
 }
 </style>

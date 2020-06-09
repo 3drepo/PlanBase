@@ -18,51 +18,51 @@ storiesOf('QuestionsList', module)
 				return [
 					{
 						id: '1',
-						label: 'Subway',
+						title: 'Subway',
 					},
 					{
 						id: '2',
-						label: 'Stadium',
+						title: 'Stadium',
 					},
 					{
 						id: '3',
-						label: 'Cafe',
+						title: 'Cafe',
 					},
 					{
 						id: '4',
-						label: 'Footpath',
+						title: 'Footpath',
 					},
 					{
 						id: '5',
-						label: 'Drainage',
+						title: 'Drainage',
 					},
 					{
 						id: '6',
-						label: 'Garden',
+						title: 'Garden',
 					},
 					{
 						id: '7',
-						label: 'Subway',
+						title: 'Subway',
 					},
 					{
 						id: '8',
-						label: 'Stadium',
+						title: 'Stadium',
 					},
 					{
 						id: '9',
-						label: 'Cafe',
+						title: 'Cafe',
 					},
 					{
 						id: '10',
-						label: 'Footpath',
+						title: 'Footpath',
 					},
 					{
 						id: '11',
-						label: 'Drainage',
+						title: 'Drainage',
 					},
 					{
 						id: '12',
-						label: 'Garden',
+						title: 'Garden',
 					},
 				];
 			},
