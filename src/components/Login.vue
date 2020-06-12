@@ -47,10 +47,10 @@ export default Vue.extend({
 		async handleContinue(event: any) {
 			event.preventDefault();
 			// (optional) Wait until recaptcha has been loaded.
-			await this.$recaptchaLoaded();
+			//await this.$recaptchaLoaded();
 
 			// Execute reCAPTCHA with action "login".
-			const token = await this.$recaptcha('login');
+			const token = 'dummy'; // await this.$recaptcha('login');
 			const email = this.email;
 			const postcode = this.postcode;
 
