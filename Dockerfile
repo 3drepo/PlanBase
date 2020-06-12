@@ -16,6 +16,7 @@ RUN npm install -g http-server
 USER node
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/dist/index.html ./dist/404.html
 
 EXPOSE 8080
 CMD [ "http-server", "dist" ]
