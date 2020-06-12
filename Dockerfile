@@ -7,14 +7,8 @@ WORKDIR /app
 COPY . .
 
 # install project dependencies and build static
-RUN yarn install
-
-# set to production to pass lint
-ARG NODE_ENV=production
-ENV NODE_ENV ${NODE_ENV:-production}
-
-# build
-RUN NODE_ENV=production yarn build 
+RUN yarn install && \
+    NODE_ENV=development yarn build 
 
 FROM node:lts-alpine as deploy
 # install simple http server for serving static content
