@@ -2,6 +2,7 @@
 **/dist
 package-lock.json
 yarn.lock
+build.sh
 
 /tests/e2e/videos/
 /tests/e2e/screenshots/
