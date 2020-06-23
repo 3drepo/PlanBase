@@ -59,7 +59,7 @@ export default Vue.extend({
 				y: this.pinLocation.y,
 			};
 
-			await this.$store.dispatch('createPin', payload);
+			await this.$store.dispatch('createPin', payload).catch(err => console.log(err));
 
 			this.comment = {
 				category: null,

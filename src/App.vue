@@ -1,13 +1,19 @@
 <template>
 	<v-app id="inspire">
-		<Navbar />
-		<ProgressBar v-if="user" />
-		<v-content>
-			<v-container fluid>
-				<Login v-if="!user" />
-				<router-view v-else></router-view>
-			</v-container>
-		</v-content>
+		<div v-if="mobileDevice" class="flex justify-center items-center bg-white app-container">
+			<img alt="Planbase Logo" class="pb-logo-large" src="./assets/images/planbase_logo.png" />
+			<h2 class="text-center px-4">Unfortunately this app is currently unavailable on mobile devices</h2>
+		</div>
+		<div v-else class="app-container">
+			<Navbar />
+			<ProgressBar v-if="user" />
+			<v-content>
+				<v-container fluid>
+					<Login v-if="!user" />
+					<router-view v-else></router-view>
+				</v-container>
+			</v-content>
+		</div>
 	</v-app>
 </template>
 
@@ -41,6 +47,10 @@ export default Vue.extend({
 	}),
 
 	computed: {
+		mobileDevice() {
+			return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? true : false;
+		},
+
 		user() {
 			const user = this.$store.getters.user;
 			return user.email !== null && user.postcode !== null;
@@ -48,7 +58,7 @@ export default Vue.extend({
 	},
 
 	async created() {
-		await (this as any).$store.dispatch('init');
+		await (this as any).$store.dispatch('init').catch((err: any) => console.log(err));
 		const cookie = (this as any).$cookies.get('user');
 		if (cookie) {
 			(this as any).$store.commit('setUser', cookie);
@@ -81,6 +91,8 @@ function init() {
 	setAPI();
 
 	(window as any).initialiseViewer = initialiseViewer;
+	(window as any).planbase_progress_loaded = 0;
+	(window as any).planbase_model_loaded = 0;
 
 	function setAPI() {
 		UnityUtil.setAPIHost({
@@ -166,11 +178,11 @@ function init() {
 				function(error: any) {
 					console.error(error);
 				},
-				function() {
-					console.log('progressCallback');
+				function(progress: number) {
+					(window as any).planbase_progress_loaded = progress;
 				},
-				function() {
-					console.log('modelLoaderProgressCallback');
+				function(progress: number) {
+					(window as any).planbase_model_loaded = progress;
 				}
 			);
 
@@ -191,6 +203,10 @@ function init() {
 </script>
 
 <style lang="scss">
+html {
+	overflow: hidden !important;
+}
+
 .container {
 	padding: 0;
 	height: 100%;
@@ -199,6 +215,33 @@ function init() {
 .v-application {
 	pointer-events: none;
 	background: transparent !important;
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	.v-application--wrap {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		.app-container {
+			width: 100%;
+			height: 100vh;
+			display: flex;
+			flex-direction: column;
+			.v-content,
+			.pb-progress-bar {
+				width: 100%;
+				max-width: 1440px;
+				margin: 0 auto;
+				border-left: #ccc 1px solid;
+				border-right: #ccc 1px solid;
+			}
+			.pb-logo-large {
+				width: 100%;
+				max-width: 300px;
+				margin-bottom: 2rem;
+			}
+		}
+	}
 }
 
 #viewer,
@@ -209,7 +252,13 @@ function init() {
 	border: none;
 	padding: 0;
 	margin: 0;
-	background: darkgray;
+	background: #eee !important;
 	font-family: 'Roboto', sans-serif;
+	display: flex;
+	justify-content: center;
+	canvas {
+		max-width: 1440px;
+		height: 100vh;
+	}
 }
 </style>

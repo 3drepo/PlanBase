@@ -40,7 +40,7 @@ export default {
 
 	methods: {
 		questionSelected(question: any) {
-			(this as any).selectedQuestion = question;
+			(this as any).selectedQuestion = { ...question, time: Date.now() };
 		},
 
 		previousQuestion() {

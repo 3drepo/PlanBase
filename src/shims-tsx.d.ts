@@ -9,6 +9,7 @@ type TdrIssue = {
 	status: string;
 	thumbnail: string;
 	viewpoint: {
+		screenshot: string;
 		position: number[];
 		look_at: number[];
 		up: number[];
@@ -40,4 +41,9 @@ type ProjectOverview = {
 	bodyText: string;
 	logoUrl: string;
 	backgroundUrl: string;
+};
+
+type ProjectSummary = {
+	title: string;
+	bodyText: string;
 };

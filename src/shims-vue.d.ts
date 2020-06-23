@@ -8,6 +8,7 @@ interface User {
 	postcode: string | null;
 }
 
+// Extends the Walktrough Point to allow for local rating and comment to be added to each
 interface Question extends WalkthroughPoint {
 	// id: string;
 	// title: string;
@@ -43,4 +44,9 @@ interface Overview {
 	bodyText: string;
 	logoUrl: string;
 	backgroundUrl: string;
+}
+
+interface Summary {
+	title: string;
+	bodyText: string;
 }

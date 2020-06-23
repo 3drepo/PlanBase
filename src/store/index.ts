@@ -1,15 +1,17 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import axios from 'axios';
+
 // 3dRepo API
 import ApiManager from '../libs/tdr/api-manager';
 import ApiClient from '../libs/tdr/api-client';
 let apiManager = new ApiManager('PlanBase', '353a00c0-9918-11ea-bb8a-7339f221efad');
-let apiClient = new ApiClient('');
+let apiClient = new ApiClient('3d1295141c0dc9d9b9222018a72961ff');
 
 Vue.use(Vuex);
 
-import { format, isWithinInterval } from 'date-fns';
+import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
 export default new Vuex.Store({
@@ -19,6 +21,7 @@ export default new Vuex.Store({
 		user: {
 			email: null,
 			postcode: null,
+			jwt: null,
 		},
 
 		overview: {
@@ -28,8 +31,10 @@ export default new Vuex.Store({
 			backgroundUrl: '',
 		} as Overview,
 
+		// These are 3dRepo issues that have been created by Planbase Admin
 		questions: [] as Question[],
 
+		// These are issues that have been created by Planbase End Users
 		pins: [
 			{
 				id: 'p1',
@@ -109,6 +114,10 @@ export default new Vuex.Store({
 			return state.overview;
 		},
 
+		summary(state: any) {
+			return state.summary;
+		},
+
 		walkthroughPoints(state: any) {
 			return state.walkthroughPoints;
 		},
@@ -135,6 +144,10 @@ export default new Vuex.Store({
 			state.overview = overview;
 		},
 
+		setSummary(state: any, summary: Summary) {
+			state.summary = summary;
+		},
+
 		setQuestions(state: any, questions: Question[]) {
 			state.questions = questions;
 		},
@@ -155,22 +168,24 @@ export default new Vuex.Store({
 
 	actions: {
 		async init({ commit }: any) {
-			const res: any = await Promise.all([apiManager.getProjectOverview(), apiManager.getWalkthroughPoints()]).catch(err => {
-				console.error(err);
-				return;
-			});
+			const res: any = await Promise.all([apiManager.getProjectOverview(), apiManager.getProjectSummary(), apiManager.getWalkthroughPoints()]).catch(err => console.log(err));
 
-			const questions = res[1].map((w: WalkthroughPoint) => {
+			if (!res) return;
+
+			const questions = res[2].map((w: WalkthroughPoint) => {
+				// TODO: Change to using the screenshot image
+				// const imageUrl = w.thumbnailUrl.replace('thumbnail', 'screenshot');
+				const imageUrl = w.thumbnailUrl;
 				return {
 					id: w.id,
 					title: w.title,
 					bodyText: w.bodyText,
 					type: w.type,
-					thumbnailUrl: 'https://api3.www.3drepo.io/api/' + w.thumbnailUrl,
+					thumbnailUrl: 'https://api3.www.3drepo.io/api/' + imageUrl,
 					viewpoint: w.viewpoint,
 					narrative: {
-						image: 'https://api3.www.3drepo.io/api/' + w.thumbnailUrl,
-						comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id euismod nisl, id ultrices tellus. Mauris scelerisque tempus turpis sed luctus.',
+						image: 'https://api3.www.3drepo.io/api/' + imageUrl,
+						comment: w.bodyText,
 					},
 					comment: null,
 					rating: null,
@@ -178,10 +193,13 @@ export default new Vuex.Store({
 			});
 
 			commit('setOverview', res[0]);
+			commit('setSummary', res[1]);
 			commit('setQuestions', questions);
 		},
 
 		async createPin({ commit, state }: any, { category, text, x, y }: any) {
+			const jwt: string = Vue.$cookies.get('user').jwt;
+
 			const pin: Pin = {
 				id: uuidv4(),
 				x,
@@ -210,6 +228,8 @@ export default new Vuex.Store({
 		},
 
 		async saveComment({ commit }: any, { category, text, pinId }: any) {
+			const jwt: string = Vue.$cookies.get('user').jwt;
+
 			const comment: PinComment = {
 				id: 'pc651',
 				pinId,
@@ -226,6 +246,36 @@ export default new Vuex.Store({
 			commit('setComments', comment);
 
 			return;
+		},
+
+		async addToList({ commit }: any, { user }: any) {
+			const jwt: string = Vue.$cookies.get('user').jwt;
+
+			await axios({
+				method: 'post',
+				url: 'https://0zi7k1xq57.execute-api.eu-west-1.amazonaws.com/production/listMember',
+				data: {
+					user,
+					jwt,
+				},
+			}).catch(err => console.log(err));
+
+			return;
+		},
+
+		async savePinComment({ commit }: any, data: { issueId: string; comment: string }) {
+			const jwt: string = Vue.$cookies.get('user').jwt;
+			console.log(jwt);
+
+			const res = await axios({
+				method: 'post',
+				url: 'https://0zi7k1xq57.execute-api.eu-west-1.amazonaws.com/production/addComment',
+				data,
+			}).catch(err => console.log(err));
+
+			if (!res) return;
+
+			return res.data;
 		},
 	},
 

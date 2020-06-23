@@ -104,15 +104,28 @@
 		</div>
 
 		<!-- Comment -->
-		<div v-if="selectedQuestion.type === 'AgreementScale' && rating" class="px-6 py-3 pb-card-question-comment">
+		<div v-if="selectedQuestion.type === 'AgreementScale' && rating && !savedComment.text" class="px-6 py-3 pb-card-question-comment">
 			<label for="comment-text-area" class="text-xs uppercase">Please add a comment to support your choice</label>
 			<v-textarea outlined id="comment-text-area" name="comment-text-area" placeholder="e.g. They are far enough from the water's edge" v-model="comment" class="mt-2"></v-textarea>
 		</div>
 
+		<!-- Saved Comment -->
+		<div v-if="selectedQuestion.type === 'AgreementScale' && rating && savedComment.text" class="px-6 py-3 pb-card-question-comment">
+			<!-- <label for="comment-text-area" class="text-xs">Your Comment</label> -->
+			<div class="flex justify-between p-2">
+				<span class="text-xs">Your Comment</span>
+				<span class="text-xs">{{ savedComment.date }}</span>
+			</div>
+			<div class="saved-comment-container">
+				<span>{{ savedComment.text }}</span>
+			</div>
+		</div>
+
 		<!-- Button Bar -->
 		<div class="p-2 flex justify-between pb-button-bar">
-			<v-btn text large color="secondary">Skip Question</v-btn>
-			<v-btn text large color="success">Save Comment</v-btn>
+			<v-btn text large color="secondary" @click="$emit('nextQuestion')">{{ selectedQuestion.type === 'Narrative' ? 'Next' : 'Skip Question' }}</v-btn>
+			<v-btn v-if="rating && !savedComment.text" text large color="success" @click="saveComment" :loading="saving">Save Comment</v-btn>
+			<v-btn v-if="rating && savedComment.text" text large color="success" @click="$emit('nextQuestion')">Next Question</v-btn>
 		</div>
 	</div>
 </template>
@@ -120,6 +133,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
+import { format } from 'date-fns';
 
 export default Vue.extend({
 	name: 'Question',
@@ -133,6 +147,11 @@ export default Vue.extend({
 	data: () => ({
 		rating: null as null | number,
 		comment: '',
+		savedComment: {
+			text: '',
+			date: '',
+		},
+		saving: false,
 		// image: require('@/assets/images/question_image.png'),
 		imageExpanded: false,
 	}),
@@ -161,6 +180,18 @@ export default Vue.extend({
 		toggleImage() {
 			this.imageExpanded = !this.imageExpanded;
 		},
+
+		async saveComment() {
+			const issueId = this.selectedQuestion.id;
+			const comment = this.comment;
+			this.saving = true;
+			const res = await this.$store.dispatch('savePinComment', { issueId, comment }).catch(err => console.log(err));
+			this.saving = false;
+			this.savedComment.text = res.data.comment;
+			this.savedComment.date = format(new Date(res.data.created), 'kk:mm dd MMM');
+			this.comment = '';
+			return;
+		},
 	},
 
 	watch: {
@@ -178,7 +209,7 @@ export default Vue.extend({
 .pb-question-card {
 	pointer-events: all;
 	width: 400px;
-	margin-left: 180px;
+	margin-left: 210px;
 	border-radius: 1px;
 	background-color: #fff;
 	box-shadow: 1px 1px 13px 0 rgba(79, 94, 120, 0.14);
@@ -227,7 +258,7 @@ export default Vue.extend({
 
 	.expanded-image {
 		width: calc(100vw - 220px);
-		max-width: 1600px;
+		max-width: 1100px;
 		height: 600px;
 		z-index: 10;
 		top: 0;
@@ -343,6 +374,25 @@ export default Vue.extend({
 			justify-content: center;
 			padding: 10px;
 			margin: 5px;
+		}
+	}
+
+	.saved-comment-container {
+		padding: 1rem;
+		background: #f6f5f5;
+		span {
+			font-size: 14px;
+			font-weight: 300;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			font-family: Roboto, sans-serif;
+			font-size: 16px;
+			letter-spacing: 0.6px;
+			font-family: Arial, sans-serif;
+			font-size: 14px;
+			line-height: 20px;
+			color: #333;
 		}
 	}
 

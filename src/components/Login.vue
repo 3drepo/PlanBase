@@ -5,6 +5,9 @@
 			<p>
 				To continue please provide your email address and postcode. Your information will not be used for anything other than contacting you again in the future.
 			</p>
+			<a class="text-xs" href="https://www.3drepo.io/terms" target="_blank">Terms &amp; Conditions</a>
+			<span class="text-xs ml-1">and</span>
+			<a class="text-xs ml-1" href="https://www.3drepo.io/privacy" target="_blank">Privacy</a>
 		</div>
 		<div class="pb-form-section">
 			<v-form ref="form" v-model="valid" :lazy-validation="lazy" @submit="handleContinue($event)">
@@ -27,6 +30,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { VueReCaptcha } from 'vue-recaptcha-v3';
+import axios from 'axios';
 
 // TODO: Replace this key with a Planbase registered one after testing
 Vue.use(VueReCaptcha, { siteKey: '6LdCmPAUAAAAAC8aFpdhGcMk30OkXYhfJKceH55B' });
@@ -47,17 +51,32 @@ export default Vue.extend({
 		async handleContinue(event: any) {
 			event.preventDefault();
 			// (optional) Wait until recaptcha has been loaded.
-			//await this.$recaptchaLoaded();
+			await this.$recaptchaLoaded().catch(err => console.log(err));
 
-			// Execute reCAPTCHA with action "login".
-			const token = 'dummy'; // await this.$recaptcha('login');
 			const email = this.email;
 			const postcode = this.postcode;
 
-			if (token && email && postcode) {
-				const user = { email, postcode };
-				this.$cookies.set('user', user);
+			// Execute reCAPTCHA with action "login".
+			const jwt = await this.$recaptcha('login').catch(err => console.log(err));
+
+			if (!jwt) return;
+
+			const response = await axios({
+				method: 'POST',
+				url: 'https://0zi7k1xq57.execute-api.eu-west-1.amazonaws.com/production/recaptcha',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				data: {
+					jwt,
+					email,
+					postcode,
+				},
+			}).catch(err => console.log(err));
+
+			if (response && response.data.success && email && postcode) {
+				const user = { email, postcode, jwt: response.data.jwt };
+				this.$cookies.set('user', user, '7d', '', '', true, 'Lax');
 				this.$store.commit('setUser', user);
+				await this.$store.dispatch('addToList', { user, jwt: response.data.jwt }).catch(err => console.log(err));
 				this.$router.push({ name: 'overview' });
 			}
 		},

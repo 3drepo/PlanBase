@@ -6,7 +6,7 @@
 		<div class="pb-nav-body">
 			<span class="pl-3 text-xl">{{ overview.title }}</span>
 			<v-spacer></v-spacer>
-			<v-btn class="tdr-load-btn" small color="primary" v-if="!tdrLoaded" @click="loadTdr">Load 3DRepo</v-btn>
+			<v-btn class="tdr-load-btn" color="primary" v-if="!tdrLoaded" @click="loadTdr">Load Model (Dev Only)</v-btn>
 			<v-switch v-model="_highContrast" color="primary" class="contrast-switch"></v-switch>
 			<v-icon>{{ _highContrast ? 'mdi-brightness-7' : 'mdi-brightness-5' }}</v-icon>
 		</div>
@@ -84,6 +84,8 @@ export default Vue.extend({
 
 <style lang="scss">
 .tdr-load-btn {
+	height: 24px !important;
+	font-size: 0.5rem !important;
 	margin: 0 10px;
 }
 .contrast-switch {

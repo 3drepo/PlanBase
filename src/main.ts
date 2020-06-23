@@ -10,7 +10,7 @@ import '@/main.scss';
 // Cookies
 import VueCookies from 'vue-cookies';
 Vue.use(VueCookies);
-Vue.$cookies.config('1d');
+Vue.$cookies.config('7d', '', '', false, 'Lax');
 
 Vue.config.productionTip = false;
 

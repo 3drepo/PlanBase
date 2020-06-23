@@ -5,7 +5,7 @@ export default class ApiManager {
 	apiKey: string;
 
 	constructor(private teamspaceId: string, private modelId: string) {
-		this.apiKey = '';
+		this.apiKey = 'cedfaddbd5431f26b1357a719408934b';
 		this.apiClient = new ApiClient(this.apiKey);
 	}
 
@@ -14,7 +14,13 @@ export default class ApiManager {
 
 		let results = issues.filter(i => i.topic_type === 'For information');
 
-		if (results.length === 0) return null;
+		if (results.length === 0)
+			return {
+				title: 'Not loaded.',
+				bodyText: 'Not loaded.',
+				logoUrl: '',
+				backgroundUrl: '',
+			};
 
 		let issue = await this.apiClient.getIssue(this.teamspaceId, this.modelId, results[0]._id);
 
@@ -36,6 +42,24 @@ export default class ApiManager {
 		};
 	}
 
+	async getProjectSummary(): Promise<ProjectSummary | null> {
+		let issues = await this.apiClient.getIssues(this.teamspaceId, this.modelId);
+
+		let results = issues.filter(i => i.topic_type === 'Diff');
+
+		if (results.length === 0) return { title: 'Not loaded.', bodyText: 'Not loaded.' };
+
+		let issue = await this.apiClient.getIssue(this.teamspaceId, this.modelId, results[0]._id);
+
+		let title = issue.desc.split('\n\n')[0];
+		let bodyText = issue.desc.replace(title + '\n\n', '').replace('\n\n', '<br/><br/>');
+
+		return {
+			title,
+			bodyText,
+		};
+	}
+
 	async getWalkthroughPoints(): Promise<WalkthroughPoint[]> {
 		let issues = await this.apiClient.getIssues(this.teamspaceId, this.modelId);
 
@@ -46,7 +70,27 @@ export default class ApiManager {
 				title: i.name,
 				bodyText: i.desc,
 				type: i.topic_type === 'Question' ? 'AgreementScale' : 'Narrative',
-				thumbnailUrl: i.thumbnail,
+				thumbnailUrl: i.viewpoint.screenshot + '?key=' + this.apiKey,
+				viewpoint: {
+					position: i.viewpoint.position,
+					up: i.viewpoint.up,
+					lookAt: i.viewpoint.look_at,
+					viewDir: i.viewpoint.view_dir,
+				},
+			}));
+	}
+
+	async getUserPins(): Promise<WalkthroughPoint[]> {
+		let issues = await this.apiClient.getIssues(this.teamspaceId, this.modelId);
+
+		return issues
+			.filter(i => i.topic_type === 'Question' || i.topic_type === 'Walkthrough')
+			.map(i => ({
+				id: i._id,
+				title: i.name,
+				bodyText: i.desc,
+				type: i.topic_type === 'Question' ? 'AgreementScale' : 'Narrative',
+				thumbnailUrl: i.viewpoint.screenshot + '?key=' + this.apiKey,
 				viewpoint: {
 					position: i.viewpoint.position,
 					up: i.viewpoint.up,

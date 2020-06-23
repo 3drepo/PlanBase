@@ -89,7 +89,7 @@ export default Vue.extend({
 					...this.comment,
 					pinId: this.selectedPin.id,
 				};
-				await this.$store.dispatch('saveComment', payload);
+				await this.$store.dispatch('saveComment', payload).catch(err => console.log(err));
 				this.comment = {
 					category: null,
 					text: '',
