@@ -6,8 +6,7 @@ import axios from 'axios';
 // 3dRepo API
 import ApiManager from '../libs/tdr/api-manager';
 import ApiClient from '../libs/tdr/api-client';
-let apiManager = new ApiManager('PlanBase', '353a00c0-9918-11ea-bb8a-7339f221efad');
-let apiClient = new ApiClient('3d1295141c0dc9d9b9222018a72961ff');
+let apiManager = new ApiManager('PlanBase', '353a00c0-9918-11ea-bb8a-7339f221efad', 'cedfaddbd5431f26b1357a719408934b');
 
 Vue.use(Vuex);
 
