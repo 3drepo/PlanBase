@@ -2,8 +2,8 @@ import ApiManager from './api-manager';
 import ApiClient from './api-client';
 
 async function main() {
-	let apiManager = new ApiManager('PlanBase', '353a00c0-9918-11ea-bb8a-7339f221efad');
-	let apiClient = new ApiClient('3d1295141c0dc9d9b9222018a72961ff');
+	let apiManager = new ApiManager('PlanBase', '353a00c0-9918-11ea-bb8a-7339f221efad', 'cedfaddbd5431f26b1357a719408934b');
+	let apiClient = new ApiClient('cedfaddbd5431f26b1357a719408934b');
 
 	//console.log(await apiClient.getIssues('PlanBase', '19a3ef10-83d8-11ea-81c9-931a0b2034c3'));
 

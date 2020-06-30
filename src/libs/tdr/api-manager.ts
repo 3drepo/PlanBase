@@ -2,10 +2,8 @@ import ApiClient from './api-client';
 
 export default class ApiManager {
 	apiClient: ApiClient;
-	apiKey: string;
 
-	constructor(private teamspaceId: string, private modelId: string) {
-		this.apiKey = 'cedfaddbd5431f26b1357a719408934b';
+	constructor(private teamspaceId: string, private modelId: string, private apiKey: string) {
 		this.apiClient = new ApiClient(this.apiKey);
 	}
 

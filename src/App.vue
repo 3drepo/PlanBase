@@ -186,6 +186,8 @@ function init() {
 				}
 			);
 
+			UnityUtil.setAPIKey('cedfaddbd5431f26b1357a719408934b');
+
 			UnityUtil.loadUnity('unity', PREFIX + '/unity/Build/unity.json', 2130706432 / 10);
 
 			UnityUtil.onReady()
