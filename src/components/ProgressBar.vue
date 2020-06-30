@@ -63,7 +63,7 @@ export default Vue.extend({
 .pb-progress-bar {
 	pointer-events: all;
 	background: white;
-	display: flex;
+	display: none;
 	justify-content: space-between;
 	align-items: center;
 	.pb-step {

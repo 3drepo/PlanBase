@@ -55,7 +55,7 @@ export default Vue.extend({
 	pointer-events: all;
 	width: 100%;
 	background: white;
-	display: flex;
+	display: none;
 	border-bottom: 1px solid #eee;
 }
 
