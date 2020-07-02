@@ -216,7 +216,7 @@ export default new Vuex.Store({
 				// // commit('toggleLoading', false);
 				// commit('toggleLoading', false);
 				// return;
-				id = 1;
+				(window as any).location = '/?id=1';
 			}
 
 			// Look for config file with matching id provided in URL param

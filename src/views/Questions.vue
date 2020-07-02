@@ -98,10 +98,19 @@ export default {
 	},
 
 	mounted() {
-		(this as any).questions.map((q: WalkthroughPoint) => {
-			if (q.position && q.position.length > 0) (window as any).UnityUtil.dropIssuePin(q.id, q.position, [], [255, 0, 0]);
-		});
+		if ((this as any).config.showNarrativePins)
+			(this as any).questions.map((q: WalkthroughPoint) => {
+				if (q.position && q.position.length > 0) (window as any).UnityUtil.dropIssuePin(q.id, q.position, [], [255, 0, 0]);
+			});
 		(this as any).selectedQuestion = (this as any).questions[0];
+
+		window.addEventListener('CLICK_PIN', (object: any) => {
+			(this as any).questions.forEach((q: any) => {
+				if (q.id === object.detail) {
+					(this as any).selectedQuestion = q;
+				}
+			});
+		});
 	},
 };
 </script>

@@ -65,7 +65,7 @@ export default Vue.extend({
 	},
 
 	async mounted() {
-		init(this.$emit.bind(this));
+		init();
 
 		const urlParams = new URLSearchParams(window.location.search);
 		const id = urlParams.get('id');
@@ -86,7 +86,7 @@ var API_PREFIX = 'https://api1.www.3drepo.io';
 	errorhandler: {},
 };
 
-function init($emit: any) {
+function init() {
 	// Replace as appropriate
 	var API = API_PREFIX + '/api/';
 	var account: string = 'PlanBase';
@@ -201,27 +201,17 @@ function init($emit: any) {
 
 					UnityUtil.viewer = {
 						objectSelected: function(pointInfo: any) {
-							if (pointInfo.id) {
-								if (pointInfo.pin) {
-									// User clicked a pin
-									$emit('VIEWER_EVENTS.CLICK_PIN', {
-										id: pointInfo.id,
-									});
-								} else {
-									$emit('VIEWER_EVENTS.OBJECT_SELECTED', {
-										account: pointInfo.database,
-										id: pointInfo.id,
-										model: pointInfo.model,
-										source: 'viewer',
-									});
-								}
-							} else {
-								$emit('VIEWER_EVENTS.BACKGROUND_SELECTED');
+							if (pointInfo.id && pointInfo.pin) {
+								window.dispatchEvent(
+									new CustomEvent('CLICK_PIN', {
+										detail: pointInfo.id,
+									} as any)
+								);
 							}
 						},
 						pickPointEvent: function(pointInfo: any) {
 							if (pointInfo.position && pointInfo.position.length > 0) {
-								UnityUtil.dropIssuePin('test', pointInfo.position, [], [133, 133, 133]);
+								//UnityUtil.dropIssuePin('test', pointInfo.position, [], [133, 133, 133]);
 							}
 						},
 					};
