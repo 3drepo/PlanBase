@@ -8,6 +8,7 @@ type TdrIssue = {
 	topic_type: string;
 	status: string;
 	thumbnail: string;
+	position: number[];
 	viewpoint: {
 		screenshot: string;
 		position: number[];
@@ -28,6 +29,7 @@ type WalkthroughPoint = {
 	bodyText: string;
 	type: 'Narrative' | 'AgreementScale' | 'Freetext';
 	thumbnailUrl: string;
+	position: number[];
 	viewpoint: {
 		position: number[];
 		lookAt: number[];
@@ -46,4 +48,15 @@ type ProjectOverview = {
 type ProjectSummary = {
 	title: string;
 	bodyText: string;
+};
+
+type Config = {
+	modelId: string;
+	apiKey: string;
+	showTitleBar: boolean;
+	showNavBar: boolean;
+	enableEmailPostcode: boolean;
+	showNarrativeList: boolean;
+	showNarrativePins: boolean;
+	showThumbnails: boolean;
 };

@@ -1,5 +1,5 @@
 <template>
-	<div class="pb-question-card">
+	<div class="pb-question-card" v-if="selectedQuestion" :class="config.showNarrativeList ? 'left-margin' : ''">
 		<!-- Card Header -->
 		<div class="flex relative pb-card-header">
 			<div class="px-6 py-3 flex-1 flex items-center">
@@ -124,7 +124,7 @@
 		<!-- Button Bar -->
 		<div class="p-2 flex justify-between pb-button-bar">
 			<v-btn text large color="secondary" @click="$emit('nextQuestion')">{{ selectedQuestion.type === 'Narrative' ? 'Next' : 'Skip Question' }}</v-btn>
-			<v-btn v-if="rating && !savedComment.text" text large color="success" @click="saveComment" :loading="saving">Save Comment</v-btn>
+			<v-btn v-if="rating && !savedComment.text" text large color="success" @click="saveComment" :loading="saving" :disabled="!comment">Save Comment</v-btn>
 			<v-btn v-if="rating && savedComment.text" text large color="success" @click="$emit('nextQuestion')">Next Question</v-btn>
 		</div>
 	</div>
@@ -157,7 +157,7 @@ export default Vue.extend({
 	}),
 
 	computed: {
-		...mapGetters(['highContrast']),
+		...mapGetters(['highContrast', 'config']),
 
 		narrative() {
 			if (!this.selectedQuestion || !this.selectedQuestion.narrative) return null;
@@ -183,12 +183,30 @@ export default Vue.extend({
 
 		async saveComment() {
 			const issueId = this.selectedQuestion.id;
-			const comment = this.comment;
+			const commentObj = {
+				rating: this.rating,
+				comment: this.comment,
+			};
+			const comment = JSON.stringify(commentObj);
 			this.saving = true;
+
+			// Save details to API
 			const res = await this.$store.dispatch('savePinComment', { issueId, comment }).catch(err => console.log(err));
+			if (!res) {
+				console.log('Unable to save comment');
+				this.saving = false;
+				return;
+			}
+
+			// If successful
+			const createdAt = format(new Date(res.data.created), 'kk:mm dd MMM');
+			const previousAnswers = JSON.parse(Vue.$cookies.get('questions'));
+			const oldArray = previousAnswers ? previousAnswers : [];
+			const newArray = JSON.stringify([{ issueId, ...commentObj, createdAt }, ...oldArray]);
+			Vue.$cookies.set('questions', newArray);
 			this.saving = false;
-			this.savedComment.text = res.data.comment;
-			this.savedComment.date = format(new Date(res.data.created), 'kk:mm dd MMM');
+			this.savedComment.text = this.comment;
+			this.savedComment.date = createdAt;
 			this.comment = '';
 			return;
 		},
@@ -196,10 +214,21 @@ export default Vue.extend({
 
 	watch: {
 		selectedQuestion(newVal: WalkthroughPoint) {
+			if (!newVal) return;
 			(window as any).UnityUtil.setViewpoint(newVal.viewpoint.position, newVal.viewpoint.up, newVal.viewpoint.viewDir, newVal.viewpoint.lookAt);
-
-			this.rating = null;
-			this.comment = '';
+			const questions = JSON.parse(Vue.$cookies.get('questions'));
+			const question = questions ? questions.find((q: { issueId: string; rating: string; comment: string }) => q.issueId === this.selectedQuestion.id) : null;
+			if (question) {
+				this.rating = parseInt(question.rating);
+				this.comment = question.comment;
+				this.savedComment.text = question.comment;
+				this.savedComment.date = question.createdAt ? question.createdAt : format(new Date(), 'kk:mm dd MMM');
+			} else {
+				this.rating = null;
+				this.comment = '';
+				this.savedComment.text = '';
+				this.savedComment.date = '';
+			}
 		},
 	},
 });
@@ -209,10 +238,14 @@ export default Vue.extend({
 .pb-question-card {
 	pointer-events: all;
 	width: 400px;
-	margin-left: 210px;
+	margin-left: 20px;
 	border-radius: 1px;
 	background-color: #fff;
 	box-shadow: 1px 1px 13px 0 rgba(79, 94, 120, 0.14);
+
+	&.left-margin {
+		margin-left: 210px;
+	}
 
 	.pb-card-header {
 		width: 100%;

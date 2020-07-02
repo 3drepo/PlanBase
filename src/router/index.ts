@@ -1,13 +1,21 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
-import Login from '../views/Login.vue';
-import store from '@/store';
+import VueRouter, { RouterOptions, RouteConfig } from 'vue-router';
+import Store from '../store';
 
 Vue.use(VueRouter);
 
 const routes = [
-	{ path: '/', redirect: '/overview' },
+	{
+		path: '/',
+		name: 'login',
+		component: () => import(/* webpackChunkName: "overview" */ '../views/Login.vue'),
+		beforeEnter: (to, from, next) => {
+			// If no config found whilst loading or enableEmailPostcode required show login screen
+			if (!Store.getters.config || Store.getters.config.enableEmailPostcode) next();
+			// Else forward to overview
+			else next('overview');
+		},
+	},
 
 	{
 		path: '/overview',
@@ -38,7 +46,7 @@ const routes = [
 		name: 'privacy',
 		component: () => import(/* webpackChunkName: "privacy" */ '../views/Privacy.vue'),
 	},
-];
+] as RouteConfig[];
 
 const router = new VueRouter({
 	mode: 'history',
@@ -47,9 +55,14 @@ const router = new VueRouter({
 });
 
 // router.beforeEach((to, from, next) => {
-// 	console.log(from.name);
-// 	console.log(to.name);
-// 	next();
+// 	// If config file exists
+// 	if (Store.getters.config && Store.getters.config.enableEmailPostcode) {
+// 		const loginRequired = Store.getters.config.enableEmailPostcode;
+// 		// If login required and no user stored in cookie
+// 		const user = Vue.$cookies.get('user');
+// 		if (loginRequired && !user) next('login');
+// 		else next();
+// 	} else next();
 // });
 
 export default router;

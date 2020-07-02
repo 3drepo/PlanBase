@@ -50,3 +50,9 @@ interface Summary {
 	title: string;
 	bodyText: string;
 }
+
+interface RecaptchaSeed {
+	jwt: string;
+	email: string;
+	postcode: string;
+}

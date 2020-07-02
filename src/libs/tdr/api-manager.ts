@@ -69,6 +69,7 @@ export default class ApiManager {
 				bodyText: i.desc,
 				type: i.topic_type === 'Question' ? 'AgreementScale' : 'Narrative',
 				thumbnailUrl: i.viewpoint.screenshot + '?key=' + this.apiKey,
+				position: i.position,
 				viewpoint: {
 					position: i.viewpoint.position,
 					up: i.viewpoint.up,
@@ -89,6 +90,7 @@ export default class ApiManager {
 				bodyText: i.desc,
 				type: i.topic_type === 'Question' ? 'AgreementScale' : 'Narrative',
 				thumbnailUrl: i.viewpoint.screenshot + '?key=' + this.apiKey,
+				position: i.position,
 				viewpoint: {
 					position: i.viewpoint.position,
 					up: i.viewpoint.up,

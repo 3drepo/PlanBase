@@ -1,21 +1,36 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
 import axios from 'axios';
+
+// Vuew Persist
+import VuexPersistence from 'vuex-persist';
+const vuexLocal = new VuexPersistence({
+	storage: window.localStorage,
+});
 
 // 3dRepo API
 import ApiManager from '../libs/tdr/api-manager';
 import ApiClient from '../libs/tdr/api-client';
-let apiManager = new ApiManager('PlanBase', '353a00c0-9918-11ea-bb8a-7339f221efad', 'cedfaddbd5431f26b1357a719408934b');
+let apiManager;
+let apiClient = new ApiClient('3d1295141c0dc9d9b9222018a72961ff');
+
+// const baseUrl = 'http://localhost:4000';
+const baseUrl = 'https://0zi7k1xq57.execute-api.eu-west-1.amazonaws.com/production';
 
 Vue.use(Vuex);
 
-import { format } from 'date-fns';
+import { format, isThisSecond } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
 export default new Vuex.Store({
 	state: {
 		highContrast: false,
+
+		loading: true,
+
+		errorMessage: '',
+
+		config: null,
 
 		user: {
 			email: null,
@@ -105,6 +120,18 @@ export default new Vuex.Store({
 			return state.highContrast;
 		},
 
+		loading(state: any) {
+			return state.loading;
+		},
+
+		errorMessage(state: any) {
+			return state.errorMessage;
+		},
+
+		config(state: any) {
+			return state.config;
+		},
+
 		user(state: any) {
 			return state.user;
 		},
@@ -139,6 +166,18 @@ export default new Vuex.Store({
 			state.highContrast = !state.highContrast;
 		},
 
+		toggleLoading(state: any, payload: boolean) {
+			state.loading = payload;
+		},
+
+		setErrorMessage(state: any, payload: string) {
+			state.errorMessage = payload;
+		},
+
+		setConfig(state: any, payload: Config) {
+			state.config = payload;
+		},
+
 		setOverview(state: any, overview: Overview) {
 			state.overview = overview;
 		},
@@ -166,14 +205,41 @@ export default new Vuex.Store({
 	},
 
 	actions: {
-		async init({ commit }: any) {
+		async init({ commit }: any, id: number) {
+			commit('setErrorMessage', '');
+			commit('toggleLoading', true);
+			commit('setConfig', null);
+
+			// If no URL param is provided
+			if (!id) {
+				// commit('setErrorMessage', 'No model id provided');
+				// // commit('toggleLoading', false);
+				// commit('toggleLoading', false);
+				// return;
+				id = 1;
+			}
+
+			// Look for config file with matching id provided in URL param
+			try {
+				var configResponse = await axios.get(`/${id}.json`);
+			} catch (error) {
+				commit('setErrorMessage', 'Config file not found!');
+				return;
+			}
+
+			const config: Config = configResponse.data;
+
+			console.log(config);
+
+			commit('setConfig', config);
+
+			apiManager = new ApiManager('PlanBase', config.modelId, config.apiKey);
+
 			const res: any = await Promise.all([apiManager.getProjectOverview(), apiManager.getProjectSummary(), apiManager.getWalkthroughPoints()]).catch(err => console.log(err));
 
 			if (!res) return;
 
 			const questions = res[2].map((w: WalkthroughPoint) => {
-				// TODO: Change to using the screenshot image
-				// const imageUrl = w.thumbnailUrl.replace('thumbnail', 'screenshot');
 				const imageUrl = w.thumbnailUrl;
 				return {
 					id: w.id,
@@ -182,6 +248,7 @@ export default new Vuex.Store({
 					type: w.type,
 					thumbnailUrl: 'https://api3.www.3drepo.io/api/' + imageUrl,
 					viewpoint: w.viewpoint,
+					position: w.position,
 					narrative: {
 						image: 'https://api3.www.3drepo.io/api/' + imageUrl,
 						comment: w.bodyText,
@@ -194,6 +261,7 @@ export default new Vuex.Store({
 			commit('setOverview', res[0]);
 			commit('setSummary', res[1]);
 			commit('setQuestions', questions);
+			commit('toggleLoading', false);
 		},
 
 		async createPin({ commit, state }: any, { category, text, x, y }: any) {
@@ -252,7 +320,7 @@ export default new Vuex.Store({
 
 			await axios({
 				method: 'post',
-				url: 'https://0zi7k1xq57.execute-api.eu-west-1.amazonaws.com/production/listMember',
+				url: `${baseUrl}/listMember`,
 				data: {
 					user,
 					jwt,
@@ -264,19 +332,31 @@ export default new Vuex.Store({
 
 		async savePinComment({ commit }: any, data: { issueId: string; comment: string }) {
 			const jwt: string = Vue.$cookies.get('user').jwt;
-			console.log(jwt);
 
 			const res = await axios({
-				method: 'post',
-				url: 'https://0zi7k1xq57.execute-api.eu-west-1.amazonaws.com/production/addComment',
-				data,
+				method: 'POST',
+				url: `${baseUrl}/addComment`,
+				data: {
+					...data,
+					jwt,
+				},
 			}).catch(err => console.log(err));
 
 			if (!res) return;
-
 			return res.data;
 		},
+
+		async verifyRecaptcha(state, data: RecaptchaSeed) {
+			return await axios({
+				method: 'POST',
+				url: `${baseUrl}/recaptcha`,
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				data,
+			}).catch(err => console.log(err));
+		},
 	},
+
+	plugins: [vuexLocal.plugin],
 
 	modules: {},
 });

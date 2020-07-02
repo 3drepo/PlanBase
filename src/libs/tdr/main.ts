@@ -19,6 +19,7 @@ async function main() {
 			type: w.type,
 			thumbnailUrl: w.thumbnailUrl,
 			viewpoint: w.viewpoint,
+			position: w.position,
 			narrative: {
 				image: 'https://picsum.photos/1000/300',
 				comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id euismod nisl, id ultrices tellus. Mauris scelerisque tempus turpis sed luctus.',

@@ -1,6 +1,7 @@
 <template>
 	<div class="pb-questions-container">
 		<QuestionsList
+			v-if="config.showNarrativeList"
 			:questions="questions"
 			:selectedQuestion="selectedQuestion"
 			:questionIndex="questionIndex"
@@ -18,6 +19,33 @@ import QuestionsList from '@/components/Questions/QuestionsList.vue';
 import Question from '@/components/Questions/Question.vue';
 import { mapGetters } from 'vuex';
 
+// /**
+// 	 * Add an issue pin
+// 	 * @category Pins
+// 	 * @param id - Identifier for the pin
+// 	 * @param position - point in space where the pin should generate
+// 	 * @param normal - normal vector for the pin (note: this is no longer used)
+// 	 * @param colour - RGB value for the colour of the pin
+// 	 */
+// 	public static dropIssuePin(id: string, position: number[], normal: number[], colour: number[]) {
+// 		const params = {
+// 			id,
+// 			position,
+// 			normal,
+// 			color : colour
+// 		};
+// 		UnityUtil.toUnity('DropIssuePin', UnityUtil.LoadingState.MODEL_LOADING, JSON.stringify(params));
+// 	}
+
+// /**
+// 	 * Remove a pin from the viewer
+// 	 * @category Pins
+// 	 * @param id - pin identifier
+// 	 */
+// 	public static removePin(id: string) {
+// 		UnityUtil.toUnity('RemovePin', UnityUtil.LoadingState.MODEL_LOADING, id);
+// 	}
+
 export default {
 	name: 'Questions',
 	components: {
@@ -30,11 +58,14 @@ export default {
 	}),
 
 	computed: {
-		...mapGetters(['questions']),
+		...mapGetters(['questions', 'config']),
 
 		questionIndex() {
+			const selectedQuestion = (this as any).selectedQuestion;
+			const questions = (this as any).questions;
+			if (!questions.length || !selectedQuestion) return;
 			const ids = (this as any).questions.map((q: any) => q.id);
-			return ids.indexOf((this as any).selectedQuestion.id);
+			return ids.indexOf(selectedQuestion.id);
 		},
 	},
 
@@ -67,6 +98,9 @@ export default {
 	},
 
 	mounted() {
+		(this as any).questions.map((q: WalkthroughPoint) => {
+			if (q.position && q.position.length > 0) (window as any).UnityUtil.dropIssuePin(q.id, q.position, [], [255, 0, 0]);
+		});
 		(this as any).selectedQuestion = (this as any).questions[0];
 	},
 };

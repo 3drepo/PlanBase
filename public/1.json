@@ -1,0 +1,11 @@
+{
+	"modelId": "353a00c0-9918-11ea-bb8a-7339f221efad",
+	"apiKey": "cedfaddbd5431f26b1357a719408934b",
+	"showTitleBar": true,
+	"showNavBar": true,
+	"enableEmailPostcode": true,
+	"showNarrativeList": true,
+	"showNarrativePins": true,
+	"showThumbnails": true,
+	"showExplorer": true
+}

@@ -61,20 +61,30 @@ export default Vue.extend({
 
 			if (!jwt) return;
 
-			const response = await axios({
-				method: 'POST',
-				url: 'https://0zi7k1xq57.execute-api.eu-west-1.amazonaws.com/production/recaptcha',
-				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-				data: {
-					jwt,
-					email,
-					postcode,
-				},
-			}).catch(err => console.log(err));
+			const response = await this.$store.dispatch('verifyRecaptcha', {
+				jwt,
+				email,
+				postcode,
+			});
+
+			// const response = await axios({
+			// 	method: 'POST',
+			// 	url: 'http://localhost:4000/recaptcha',
+			// 	// url: 'https://0zi7k1xq57.execute-api.eu-west-1.amazonaws.com/production/recaptcha',
+			// 	headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			// 	data: {
+			// 		jwt,
+			// 		email,
+			// 		postcode,
+			// 	},
+			// }).catch(err => console.log(err));
+
+			console.log(response);
 
 			if (response && response.data.success && email && postcode) {
 				const user = { email, postcode, jwt: response.data.jwt };
-				this.$cookies.set('user', user, '7d', '', '', true, 'Lax');
+				// Vue.$cookies.set('user', user, '7d', '', '', true, 'Lax');
+				Vue.$cookies.set('user', user);
 				this.$store.commit('setUser', user);
 				await this.$store.dispatch('addToList', { user, jwt: response.data.jwt }).catch(err => console.log(err));
 				this.$router.push({ name: 'overview' });

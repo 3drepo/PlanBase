@@ -18,7 +18,7 @@
 						<router-link to="/questions">START QUESTIONS</router-link>
 					</div>
 				</div>
-				<div class="p-6 flex flex-col pb-stage-item">
+				<div v-if="config.showExplorer" class="p-6 flex flex-col pb-stage-item">
 					<div class="flex-1 pb-stage-item-description">
 						<h3 class="pb-2">2. Explorer</h3>
 						<p>
@@ -52,7 +52,7 @@ export default Vue.extend({
 	},
 
 	computed: {
-		...mapGetters(['overview']),
+		...mapGetters(['overview', 'config']),
 	},
 
 	filters: {

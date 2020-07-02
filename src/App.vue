@@ -1,16 +1,25 @@
 <template>
 	<v-app id="inspire">
+		<!-- If mobile device detected -->
 		<div v-if="mobileDevice" class="flex justify-center items-center bg-white app-container">
 			<img alt="Planbase Logo" class="pb-logo-large" src="./assets/images/planbase_logo.png" />
 			<h2 class="text-center px-4">Unfortunately this app is currently unavailable on mobile devices</h2>
 		</div>
+		<!-- If app is loading -->
+		<div v-else-if="loading" class="flex justify-center items-center">
+			<h2>Loading...</h2>
+		</div>
+		<!-- If error -->
+		<div v-else-if="errorMessage" class="flex justify-center items-center">
+			<h2>{{ errorMessage }}</h2>
+		</div>
+		<!-- Else load app -->
 		<div v-else class="app-container">
-			<Navbar />
-			<ProgressBar v-if="user" />
+			<Navbar v-if="config.showTitleBar" />
+			<ProgressBar v-if="config.showNavBar && user" />
 			<v-content>
 				<v-container fluid>
-					<Login v-if="!user" />
-					<router-view v-else></router-view>
+					<router-view></router-view>
 				</v-container>
 			</v-content>
 		</div>
@@ -19,9 +28,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-
-// Views
-import Login from '@/views/Login.vue';
 
 // Components
 import Navbar from '@/components/Navbar.vue';
@@ -39,7 +45,6 @@ export default Vue.extend({
 	components: {
 		Navbar,
 		ProgressBar,
-		Login,
 	},
 
 	data: () => ({
@@ -47,6 +52,8 @@ export default Vue.extend({
 	}),
 
 	computed: {
+		...mapGetters(['loading', 'errorMessage', 'config']),
+
 		mobileDevice() {
 			return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? true : false;
 		},
@@ -57,13 +64,12 @@ export default Vue.extend({
 		},
 	},
 
-	async created() {
-		await (this as any).$store.dispatch('init').catch((err: any) => console.log(err));
-		const cookie = (this as any).$cookies.get('user');
-		if (cookie) {
-			(this as any).$store.commit('setUser', cookie);
-			(this as any).$router.push({ name: 'overview' });
-		}
+	async mounted() {
+		init(this.$emit.bind(this));
+
+		const urlParams = new URLSearchParams(window.location.search);
+		const id = urlParams.get('id');
+		await (this as any).$store.dispatch('init', id).catch((err: any) => console.log(err));
 	},
 });
 
@@ -80,9 +86,7 @@ var API_PREFIX = 'https://api1.www.3drepo.io';
 	errorhandler: {},
 };
 
-init();
-
-function init() {
+function init($emit: any) {
 	// Replace as appropriate
 	var API = API_PREFIX + '/api/';
 	var account: string = 'PlanBase';
@@ -194,6 +198,33 @@ function init() {
 				.then(function() {
 					//changeStatus('');
 					resolve();
+
+					UnityUtil.viewer = {
+						objectSelected: function(pointInfo: any) {
+							if (pointInfo.id) {
+								if (pointInfo.pin) {
+									// User clicked a pin
+									$emit('VIEWER_EVENTS.CLICK_PIN', {
+										id: pointInfo.id,
+									});
+								} else {
+									$emit('VIEWER_EVENTS.OBJECT_SELECTED', {
+										account: pointInfo.database,
+										id: pointInfo.id,
+										model: pointInfo.model,
+										source: 'viewer',
+									});
+								}
+							} else {
+								$emit('VIEWER_EVENTS.BACKGROUND_SELECTED');
+							}
+						},
+						pickPointEvent: function(pointInfo: any) {
+							if (pointInfo.position && pointInfo.position.length > 0) {
+								UnityUtil.dropIssuePin('test', pointInfo.position, [], [133, 133, 133]);
+							}
+						},
+					};
 				})
 				.catch(function(error: any) {
 					console.error('UnityUtil.onReady failed: ' + error);

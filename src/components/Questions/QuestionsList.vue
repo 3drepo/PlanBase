@@ -1,5 +1,5 @@
 <template>
-	<div @wheel="scroll($event)" class="pb-questions-list-container">
+	<div @wheel="scroll($event)" class="pb-questions-list-container" v-if="selectedQuestion && questions">
 		<div
 			v-for="(question, qIndex) in questions"
 			:key="`question-` + qIndex"
