@@ -9,17 +9,16 @@
 			<v-icon>help</v-icon>
 			<span>Questions</span>
 		</div>
-		<div class="pb-horizontal-rule"></div>
+		<!-- <div class="pb-horizontal-rule"></div>
 		<div @click="changeStep(3)" class="pb-step" :class="stage === 'explorer' ? 'active' : ''">
 			<v-icon>place</v-icon>
 			<span>Explorer</span>
-		</div>
+		</div> -->
 		<div class="pb-horizontal-rule"></div>
 		<div @click="changeStep(4)" class="pb-step" :class="stage === 'summary' ? 'active' : ''">
 			<v-icon>playlist_add_check</v-icon>
 			<span>Summary</span>
 		</div>
-		<div class="pb-horizontal-rule"></div>
 	</div>
 </template>
 
