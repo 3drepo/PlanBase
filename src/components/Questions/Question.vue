@@ -26,7 +26,7 @@
 
 			<!-- Image -->
 			<!-- <img :src="image" alt="question-image" /> -->
-			<div class="question-image" :style="{ background: 'center / cover no-repeat url(' + image + ')' }"></div>
+			<div class="question-image" :alt="narrative.comment" :title="narrative.comment" :style="{ background: 'center / cover no-repeat url(' + image + ')' }"></div>
 
 			<!-- Expand -->
 			<div @click="toggleImage" class="absolute expand-button">
