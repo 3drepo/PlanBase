@@ -51,6 +51,8 @@ type ProjectSummary = {
 };
 
 type Config = {
+	baseApiUrl: string;
+	teamspaceId: string;
 	modelId: string;
 	apiKey: string;
 	showTitleBar: boolean;

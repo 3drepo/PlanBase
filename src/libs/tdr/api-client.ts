@@ -1,15 +1,12 @@
 import axios from 'axios';
 
-const baseURLv1 = 'https://api1.www.3drepo.io/api';
-const baseURLv3 = 'https://api3.www.3drepo.io/api';
-
 export default class ApiClient {
-	constructor(private apiKey: string) {}
+	constructor(private baseApiUrl: string, private apiKey: string) {}
 
 	login(username: string, password: string) {
 		return axios
 			.post(
-				baseURLv1 + '/login',
+				this.baseApiUrl + '/login',
 				{
 					username,
 					password,
@@ -27,7 +24,7 @@ export default class ApiClient {
 
 	getUsername() {
 		return axios
-			.get(baseURLv3 + '/login', { withCredentials: true })
+			.get(this.baseApiUrl + '/login', { withCredentials: true })
 			.then(res => res.data.username)
 			.catch(err => {
 				if (err.response.data.status === 401) return null;
@@ -36,20 +33,20 @@ export default class ApiClient {
 	}
 
 	getIssues(teamspaceId: string, modelId: string): Promise<TdrIssue[]> {
-		return axios.get(baseURLv3 + '/' + teamspaceId + '/' + modelId + '/issues?key=' + this.apiKey).then(res => {
+		return axios.get(this.baseApiUrl + '/' + teamspaceId + '/' + modelId + '/issues?key=' + this.apiKey).then(res => {
 			return res.data.filter((i: any) => i.status === 'open');
 		});
 	}
 
 	getIssue(teamspaceId: string, modelId: string, issueId: string): Promise<TdrIssue> {
-		return axios.get(baseURLv3 + '/' + teamspaceId + '/' + modelId + '/issues/' + issueId + '?key=' + this.apiKey).then(res => {
+		return axios.get(this.baseApiUrl + '/' + teamspaceId + '/' + modelId + '/issues/' + issueId + '?key=' + this.apiKey).then(res => {
 			return res.data;
 		});
 	}
 
 	closeIssue(teamspaceId: string, modelId: string, issue: { rev_id: string; _id: string }) {
 		return axios.put(
-			baseURLv3 + '/' + teamspaceId + '/' + modelId + '/revision/' + issue.rev_id + '/issues/' + issue._id + '.json',
+			this.baseApiUrl + '/' + teamspaceId + '/' + modelId + '/revision/' + issue.rev_id + '/issues/' + issue._id + '.json',
 			{ status: 'closed' },
 			{
 				withCredentials: true,
@@ -62,13 +59,13 @@ export default class ApiClient {
 		let treePath;
 
 		return axios
-			.get(baseURLv1 + '/' + teamspaceId + '/' + modelId + '/revision/master/head/searchtree.json', {
+			.get(this.baseApiUrl + '/' + teamspaceId + '/' + modelId + '/revision/master/head/searchtree.json', {
 				withCredentials: true,
 			})
 			.then(res => {
 				tree = res.data;
 
-				return axios.get(baseURLv1 + '/' + teamspaceId + '/' + modelId + '/revision/master/head/tree_path.json', { withCredentials: true });
+				return axios.get(this.baseApiUrl + '/' + teamspaceId + '/' + modelId + '/revision/master/head/tree_path.json', { withCredentials: true });
 			})
 			.then(res => {
 				treePath = res.data.subModels[0].idToPath;

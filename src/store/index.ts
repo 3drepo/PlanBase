@@ -10,9 +10,7 @@ const vuexLocal = new VuexPersistence({
 
 // 3dRepo API
 import ApiManager from '../libs/tdr/api-manager';
-import ApiClient from '../libs/tdr/api-client';
 let apiManager;
-let apiClient = new ApiClient('3d1295141c0dc9d9b9222018a72961ff');
 
 // const baseUrl = 'http://localhost:4000';
 const baseUrl = 'https://0zi7k1xq57.execute-api.eu-west-1.amazonaws.com/production';
@@ -230,10 +228,11 @@ export default new Vuex.Store({
 			const config: Config = configResponse.data;
 
 			console.log(config);
+			(window as any).config = config;
 
 			commit('setConfig', config);
 
-			apiManager = new ApiManager('PlanBase', config.modelId, config.apiKey);
+			apiManager = new ApiManager(config.baseApiUrl, config.teamspaceId, config.modelId, config.apiKey);
 
 			const res: any = await Promise.all([apiManager.getProjectOverview(), apiManager.getProjectSummary(), apiManager.getWalkthroughPoints()]).catch(err => console.log(err));
 
@@ -246,11 +245,11 @@ export default new Vuex.Store({
 					title: w.title,
 					bodyText: w.bodyText,
 					type: w.type,
-					thumbnailUrl: 'https://api3.www.3drepo.io/api/' + imageUrl,
+					thumbnailUrl: config.baseApiUrl + '/' + imageUrl,
 					viewpoint: w.viewpoint,
 					position: w.position,
 					narrative: {
-						image: 'https://api3.www.3drepo.io/api/' + imageUrl,
+						image: config.baseApiUrl + '/' + imageUrl,
 						comment: w.bodyText,
 					},
 					comment: null,

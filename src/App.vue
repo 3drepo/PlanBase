@@ -65,11 +65,14 @@ export default Vue.extend({
 	},
 
 	async mounted() {
-		init();
-
 		const urlParams = new URLSearchParams(window.location.search);
 		const id = urlParams.get('id');
-		await (this as any).$store.dispatch('init', id).catch((err: any) => console.log(err));
+		await (this as any).$store
+			.dispatch('init', id)
+			.then(() => {
+				if (!initCalled) init();
+			})
+			.catch((err: any) => console.log(err));
 	},
 });
 
@@ -77,7 +80,6 @@ declare var UnityUtil: any;
 declare var viewer: any;
 
 var PREFIX = 'https://www.3drepo.io';
-var API_PREFIX = 'https://api1.www.3drepo.io';
 
 // Unity requires its setting in a global
 // variable called Module
@@ -86,10 +88,13 @@ var API_PREFIX = 'https://api1.www.3drepo.io';
 	errorhandler: {},
 };
 
+var initCalled = false;
 function init() {
-	// Replace as appropriate
-	var API = API_PREFIX + '/api/';
-	var account: string = 'PlanBase';
+	initCalled = true;
+	const baseApiUrl = (window as any).config.baseApiUrl;
+	const apiKey = (window as any).config.apiKey;
+	const teamspaceId: string = (window as any).config.teamspaceId;
+	const modelId: string = (window as any).config.modelId;
 
 	// Set the API for the viewer (for fetching models etc)
 	setAPI();
@@ -100,7 +105,7 @@ function init() {
 
 	function setAPI() {
 		UnityUtil.setAPIHost({
-			hostNames: [API],
+			hostNames: [baseApiUrl],
 		});
 	}
 
@@ -114,7 +119,7 @@ function init() {
 
 		prepareViewer().then(function() {
 			initUnity().then(function() {
-				handleModelInput('353a00c0-9918-11ea-bb8a-7339f221efad');
+				handleModelInput();
 			});
 		});
 	}
@@ -126,11 +131,11 @@ function init() {
 		else document.getElementById('status')!.classList.remove('hide');
 	}
 
-	function handleModelInput(model: string) {
+	function handleModelInput() {
 		//changeStatus('Loading Model...');
 
-		if (account && model) {
-			UnityUtil.loadModel(account, model).then(function() {
+		if (teamspaceId && modelId) {
+			UnityUtil.loadModel(teamspaceId, modelId).then(function() {
 				console.log('Model loaded');
 
 				//changeStatus('');
@@ -139,7 +144,7 @@ function init() {
 				window.dispatchEvent(event);
 			});
 		} else {
-			console.error('Model or account not valid: ' + account + model);
+			console.error('Model or Teamspace not valid: ' + teamspaceId + '/' + modelId);
 		}
 	}
 
@@ -190,7 +195,7 @@ function init() {
 				}
 			);
 
-			UnityUtil.setAPIKey('cedfaddbd5431f26b1357a719408934b');
+			UnityUtil.setAPIKey(apiKey);
 
 			UnityUtil.loadUnity('unity', PREFIX + '/unity/Build/unity.json', 2130706432 / 10);
 

@@ -3,8 +3,8 @@ import ApiClient from './api-client';
 export default class ApiManager {
 	apiClient: ApiClient;
 
-	constructor(private teamspaceId: string, private modelId: string, private apiKey: string) {
-		this.apiClient = new ApiClient(this.apiKey);
+	constructor(private baseApiUrl: string, private teamspaceId: string, private modelId: string, private apiKey: string) {
+		this.apiClient = new ApiClient(baseApiUrl, apiKey);
 	}
 
 	async getProjectOverview(): Promise<ProjectOverview | null> {
@@ -25,10 +25,10 @@ export default class ApiManager {
 		let title = issue.desc.split('\n\n')[0];
 		let bodyText = issue.desc.replace(title + '\n\n', '').replace('\n\n', '<br/><br/>');
 
-		let logoUrl = `https://api3.www.3drepo.io/api/${this.teamspaceId}/${this.modelId}/resources/${
+		let logoUrl = `${this.baseApiUrl}/${this.teamspaceId}/${this.modelId}/resources/${
 			issue.resources.filter((r: any) => r.name === 'logo.jpg' || r.name === 'logo.png')[0]._id
 		}?key=${this.apiKey}`;
-		let backgroundUrl = `https://api3.www.3drepo.io/api/${this.teamspaceId}/${this.modelId}/resources/${
+		let backgroundUrl = `${this.baseApiUrl}/${this.teamspaceId}/${this.modelId}/resources/${
 			issue.resources.filter((r: any) => r.name === 'background.jpg' || r.name === 'background.png')[0]._id
 		}?key=${this.apiKey}`;
 
