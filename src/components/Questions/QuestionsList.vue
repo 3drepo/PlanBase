@@ -1,5 +1,5 @@
 <template>
-	<div @wheel="scroll($event)" class="pb-questions-list-container" v-if="selectedQuestion && questions">
+	<div class="pb-questions-list-container" v-if="selectedQuestion && questions">
 		<div
 			v-for="(question, qIndex) in questions"
 			:key="`question-` + qIndex"
@@ -42,16 +42,6 @@ export default Vue.extend({
 		selectQuestion(index: number) {
 			this.selectedQuestionIndex = index;
 			this.$emit('selectedQuestionIndex', this.questions[index]);
-		},
-
-		scroll({ deltaY }: any, event: any) {
-			// If scrolling down
-			if (deltaY > 0) {
-				// And not on last question
-				if (this.questionIndex + 1 < this.questions.length) this.$emit('nextQuestion');
-			}
-			// Else scroll up
-			else this.$emit('previousQuestion');
 		},
 	},
 
