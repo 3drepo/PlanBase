@@ -258,7 +258,6 @@ html {
 			.v-content,
 			.pb-progress-bar {
 				width: 100%;
-				max-width: 1440px;
 				margin: 0 auto;
 				border-left: #ccc 1px solid;
 				border-right: #ccc 1px solid;
@@ -285,7 +284,6 @@ html {
 	display: flex;
 	justify-content: center;
 	canvas {
-		max-width: 1440px;
 		height: 100vh;
 	}
 }
