@@ -33,12 +33,12 @@ import { VueReCaptcha } from 'vue-recaptcha-v3';
 import axios from 'axios';
 
 // TODO: Replace this key with a Planbase registered one after testing
-// Vue.use(VueReCaptcha, {
-// 	siteKey: '6LdCmPAUAAAAAC8aFpdhGcMk30OkXYhfJKceH55B',
-// 	loaderOptions: {
-// 		autoHideBadge: true,
-// 	},
-// });
+Vue.use(VueReCaptcha, {
+	siteKey: '6LdCmPAUAAAAAC8aFpdhGcMk30OkXYhfJKceH55B',
+	loaderOptions: {
+		autoHideBadge: true,
+	},
+});
 
 export default Vue.extend({
 	name: 'Login',

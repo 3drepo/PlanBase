@@ -339,6 +339,7 @@ export default new Vuex.Store({
 					...data,
 					jwt,
 				},
+				withCredentials: false
 			}).catch(err => console.log(err));
 
 			if (!res) return;
