@@ -68,8 +68,10 @@ export default Vue.extend({
 	position: absolute;
 	top: 24px;
 	left: 0;
-	background: white;
 	min-width: 145px;
+	height: auto;
+	max-height: calc(100vh - 170px);
+	overflow: scroll;
 	.pb-questions-list-header {
 		background: #fafafa;
 		border-bottom: 1px solid #eee;
@@ -79,6 +81,7 @@ export default Vue.extend({
 	.pb-question {
 		border-bottom: 1px solid #eee;
 		border-right: 1px solid #eee;
+		background: white;
 		.pb-pill {
 			background: #eeeeee;
 			height: 24px;

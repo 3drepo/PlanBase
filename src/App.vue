@@ -199,6 +199,8 @@ function init() {
 .v-application {
 	pointer-events: none;
 	background: transparent !important;
+	overflow: hidden;
+	height: 100vh;
 }
 
 #viewer,

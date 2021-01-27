@@ -182,6 +182,9 @@ export default Vue.extend({
 	border-radius: 1px;
 	background-color: #fff;
 	box-shadow: 1px 1px 13px 0 rgba(79, 94, 120, 0.14);
+	height: auto;
+	max-height: calc(100vh - 170px);
+	overflow: scroll;
 
 	.pb-card-header {
 		width: 100%;
