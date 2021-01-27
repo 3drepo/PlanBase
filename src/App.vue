@@ -246,6 +246,8 @@ html {
 	display: flex;
 	justify-content: center;
 	flex-direction: row;
+	overflow: hidden;
+	height: 100vh;
 	.v-application--wrap {
 		display: flex;
 		flex-direction: row;
