@@ -28,7 +28,6 @@
 import Vue from 'vue';
 import { VueReCaptcha } from 'vue-recaptcha-v3';
 
-// TODO: Replace this key with a Planbase registered one after testing
 Vue.use(VueReCaptcha, { siteKey: '6LdCmPAUAAAAAC8aFpdhGcMk30OkXYhfJKceH55B' });
 
 export default Vue.extend({

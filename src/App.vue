@@ -2,12 +2,12 @@
 	<v-app id="inspire">
 		<Navbar />
 		<ProgressBar v-if="user" />
-		<v-content>
+		<v-main>
 			<v-container fluid>
 				<Login v-if="!user" />
 				<router-view v-else></router-view>
 			</v-container>
-		</v-content>
+		</v-main>
 	</v-app>
 </template>
 
@@ -50,9 +50,10 @@ export default Vue.extend({
 	async created() {
 		await (this as any).$store.dispatch('init');
 		const cookie = (this as any).$cookies.get('user');
+		const route = (this as any).$route.path;
 		if (cookie) {
 			(this as any).$store.commit('setUser', cookie);
-			(this as any).$router.push({ name: 'overview' });
+			if (route !== '/overview') (this as any).$router.push({ name: 'overview' });
 		}
 	},
 });

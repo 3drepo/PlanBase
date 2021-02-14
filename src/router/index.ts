@@ -11,24 +11,17 @@ const routes = [
 	// 	path: '/',
 	// 	name: 'login',
 	// 	component: Login,
-	// beforeEnter: (to: any, from: any, next: any) => {
-	// 	const { email, postcode } = store.getters.user;
-	// 	if (email && postcode) next(false);
-	// 	next();
-	// },
-	// },
-
-	// {
-	// 	path: '/',
-	// 	name: 'home',
-	// 	component: Home,
+	// 	beforeEnter: (to: any, from: any, next: any) => {
+	// 		const { email, postcode } = store.getters.user;
+	// 		if (email && postcode) next(false);
+	// 		next();
+	// 	},
 	// },
 
-	// {
-	// 	path: '/about',
-	// 	name: 'about',
-	// 	component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
-	// },
+	{
+		path: '/login',
+		redirect: '/overview',
+	},
 
 	{ path: '/', redirect: '/overview' },
 
@@ -64,13 +57,13 @@ const router = new VueRouter({
 });
 
 // If email or postcode is missing, send to login view
-router.beforeEach((to, from, next) => {
-	const { email, postcode } = store.getters.user;
-	if (to.name === 'login') next();
-	if (!email || !postcode) {
-		next({ name: 'login' });
-	}
-	next();
-});
+// router.beforeEach((to, from, next) => {
+// const { email, postcode } = store.getters.user;
+// if (to.path === '/login') next();
+// if (!email || !postcode) {
+// 	next({ path: '/login' });
+// }
+// next();
+// });
 
 export default router;

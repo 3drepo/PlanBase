@@ -78,20 +78,13 @@ yarn lint
 
 Add additional notes about how to deploy this on a live system
 
-## Built With
-
-- [VueJS](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-- [Vuetify](https://maven.apache.org/) - Dependency Management
-- [Vuex](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-- [Storybook](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
 ## Contributing
 
 ## Versioning
 
 ## Authors
 
-- **Chris Baker** - [PhaseZero](https://www.phaseze.ro)
+- **Chris Baker** - [BKRdev](https://www.bkrdev.com)
 
 ## License
 

@@ -3,9 +3,9 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 module.exports = {
 	configureWebpack: {
 		plugins: [
-			// new BundleAnalyzerPlugin({
-			// 	analyzerMode: 'static',
-			// }),
+			new BundleAnalyzerPlugin({
+				analyzerMode: 'static',
+			}),
 		],
 	},
 	transpileDependencies: ['vuetify'],
