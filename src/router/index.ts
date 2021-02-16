@@ -56,14 +56,4 @@ const router = new VueRouter({
 	routes,
 });
 
-// If email or postcode is missing, send to login view
-// router.beforeEach((to, from, next) => {
-// const { email, postcode } = store.getters.user;
-// if (to.path === '/login') next();
-// if (!email || !postcode) {
-// 	next({ path: '/login' });
-// }
-// next();
-// });
-
 export default router;
