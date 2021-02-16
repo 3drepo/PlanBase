@@ -40,20 +40,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 End with an example of getting some data out of the system or using it for a little demo
 
-## Storybook
-
-### Run Storybook
-
-```
-yarn storybook,
-```
-
-### Build stand alone Storybook
-
-```
-build-storybook
-```
-
 ## Running the tests
 
 ### Run your unit tests
@@ -62,16 +48,10 @@ build-storybook
 yarn test:unit
 ```
 
-### Run your end-to-end tests
-
-```
-yarn test:e2e
-```
-
 ### Lints and fixes files
 
 ```
-yarn lint
+yarn lint-fix
 ```
 
 ## Deployment

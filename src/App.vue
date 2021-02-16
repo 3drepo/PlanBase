@@ -21,8 +21,6 @@ import Login from '@/views/Login.vue';
 import Navbar from '@/components/Navbar.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 
-import { mapGetters } from 'vuex';
-
 export default Vue.extend({
 	name: 'App',
 

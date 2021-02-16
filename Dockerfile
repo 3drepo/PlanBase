@@ -8,7 +8,7 @@ COPY . .
 
 # install project dependencies and build static
 RUN yarn install && \
-    NODE_ENV=development yarn build 
+    NODE_ENV=production yarn build 
 
 FROM node:lts-alpine as deploy
 # install simple http server for serving static content
