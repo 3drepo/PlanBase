@@ -4,7 +4,7 @@
 			<img alt="Royal Docks Logo" class="rd-logo" :src="overview.logoUrl" />
 		</router-link>
 		<div class="pb-nav-body">
-			<span class="pl-3 text-xl">{{ overview.title }}</span>
+			<span class="tw-pl-3 tw-text-xl">{{ overview.title }}</span>
 			<v-spacer></v-spacer>
 			<v-btn class="tdr-load-btn" small color="primary" v-if="!tdrLoaded" @click="loadTdr">Load 3DRepo</v-btn>
 			<v-switch v-model="_highContrast" color="primary" class="contrast-switch"></v-switch>

@@ -19,7 +19,7 @@
 		<!-- <<< Pin -->
 
 		<!-- Reset View Button >>> -->
-		<div class="shadow reset-view-button" @click="resetCamera">
+		<div class="tw-shadow reset-view-button" @click="resetCamera">
 			<v-icon>mdi-sync</v-icon>
 			<span>Reset View</span>
 		</div>

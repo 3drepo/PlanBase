@@ -1,20 +1,20 @@
 <template>
 	<div class="pb-card-form">
-		<div class="p-6 pb-intro-section">
-			<h3 class="pb-3">Welcome to the Royal Victoria Docks Community Engagement Portal</h3>
+		<div class="tw-p-6 pb-intro-section">
+			<h3 class="tw-pb-3">Welcome to the Royal Victoria Docks Community Engagement Portal</h3>
 			<p>
 				To continue please provide your email address and postcode. Your information will not be used for anything other than contacting you again in the future.
 			</p>
 		</div>
 		<div class="pb-form-section">
 			<v-form ref="form" v-model="valid" :lazy-validation="lazy" @submit="handleContinue($event)">
-				<div class="p-6 pb-input-container">
-					<v-text-field class="pb-2" v-model="email" :rules="emailRules" label="You email address" placeholder="e.g. sally@gmail.com" required></v-text-field>
+				<div class="tw-p-6 pb-input-container">
+					<v-text-field class="tw-pb-2" v-model="email" :rules="emailRules" label="You email address" placeholder="e.g. sally@gmail.com" required></v-text-field>
 
 					<v-text-field v-model="postcode" :rules="postcodeRules" label="Your postcode" placeholder="e.g. SW18" required></v-text-field>
 				</div>
 
-				<div class="px-3 py-3 flex justify-end pb-button-bar">
+				<div class="tw-px-3 tw-py-3 tw-flex tw-justify-end pb-button-bar">
 					<v-btn text color="success" type="submit">
 						Continue
 					</v-btn>

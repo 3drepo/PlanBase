@@ -1,9 +1,10 @@
 import Vue from 'vue';
-import Vuetify, { VFlex, VLayout, VContainer, VImg } from 'vuetify/lib';
-import 'vuetify/src/styles/main.sass';
+import Vuetify from 'vuetify/lib';
+// import 'vuetify/src/styles/main.sass';
 
-Vue.use(Vuetify, {
-	components: { VFlex, VLayout, VContainer, VImg },
+Vue.use(Vuetify);
+
+const opts = {
 	theme: {
 		options: {
 			customProperties: true,
@@ -21,6 +22,6 @@ Vue.use(Vuetify, {
 		},
 	},
 	iconfont: 'mdi',
-});
+};
 
-export default new Vuetify();
+export default new Vuetify(opts);

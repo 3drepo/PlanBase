@@ -1,5 +1,5 @@
 <template>
-	<div class="px-6 py-4 pb-progress-bar">
+	<div class="tw-px-6 tw-py-4 pb-progress-bar">
 		<div @click="changeStep(1)" class="pb-step" :class="stage === 'overview' ? 'active' : ''">
 			<v-icon>info</v-icon>
 			<span>Overview</span>

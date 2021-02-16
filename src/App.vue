@@ -138,7 +138,7 @@ function init() {
 				'load',
 				function() {
 					console.log('Loaded UnityLoader.js succesfully');
-					resolve();
+					resolve(null);
 				},
 				false
 			);
@@ -180,7 +180,7 @@ function init() {
 			UnityUtil.onReady()
 				.then(function() {
 					//changeStatus('');
-					resolve();
+					resolve(null);
 				})
 				.catch(function(error: any) {
 					console.error('UnityUtil.onReady failed: ' + error);
