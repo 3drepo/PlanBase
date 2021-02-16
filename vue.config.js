@@ -1,7 +1,6 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
-	// transpileDependencies: ['vuetify'],
 	// chainWebpack: config => {
 	// 	const svgRule = config.module.rule('svg');
 	// 	svgRule.uses.clear();
