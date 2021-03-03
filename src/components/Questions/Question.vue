@@ -1,41 +1,41 @@
 <template>
 	<div class="pb-question-card" v-if="selectedQuestion" :class="config.showNarrativeList ? 'left-margin' : ''">
 		<!-- Card Header -->
-		<div class="flex relative pb-card-header">
-			<div class="px-6 py-3 flex-1 flex items-center">
-				<v-icon class="pr-3">place</v-icon>
+		<div class="tw-flex tw-relative pb-card-header">
+			<div class="tw-px-6 tw-py-3 tw-flex-1 tw-flex tw-items-center">
+				<v-icon class="tw-pr-3">place</v-icon>
 				<h4>{{ selectedQuestion.title }}</h4>
 			</div>
 			<div
 				v-show="questionIndex > 0"
-				class="flex justify-center items-center pb-previous"
+				class="tw-flex tw-justify-center tw-items-center pb-previous"
 				:class="highContrast ? 'pb-previous-hc' : 'pb-previous'"
 				@click="$emit('previousQuestion')"
 			>
 				<v-icon>keyboard_arrow_left</v-icon>
 			</div>
-			<div class="flex justify-center items-center" :class="highContrast ? 'pb-next-hc' : 'pb-next'" @click="$emit('nextQuestion')">
+			<div class="tw-flex tw-justify-center tw-items-center" :class="highContrast ? 'pb-next-hc' : 'pb-next'" @click="$emit('nextQuestion')">
 				<v-icon>keyboard_arrow_right</v-icon>
 			</div>
 		</div>
 
 		<!-- Question or Bookmark -->
-		<div class="px-6 py-3 pb-2 relative pb-card-section-question">
-			<h5 v-if="selectedQuestion.type === 'AgreementScale'" class="pb-2">Question {{ questionIndex + 1 }}</h5>
-			<h5 v-else class="pb-2">Bookmark {{ questionIndex + 1 }}</h5>
+		<div class="tw-px-6 tw-py-3 tw-pb-2 tw-relative pb-card-section-question">
+			<h5 v-if="selectedQuestion.type === 'AgreementScale'" class="tw-pb-2">Question {{ questionIndex + 1 }}</h5>
+			<h5 v-else class="tw-pb-2">Bookmark {{ questionIndex + 1 }}</h5>
 
 			<!-- Image -->
 			<!-- <img :src="image" alt="question-image" /> -->
 			<div class="question-image" v-if="narrative" :alt="narrative.comment" :title="narrative.comment" :style="{ background: 'center / cover no-repeat url(' + image + ')' }"></div>
 
 			<!-- Expand -->
-			<div @click="toggleImage" class="absolute expand-button">
+			<div @click="toggleImage" class="tw-absolute expand-button">
 				<v-icon>mdi-arrow-expand</v-icon>
 			</div>
 
 			<!-- Expanded Image -->
-			<div v-if="imageExpanded" class="absolute shadow expanded-image" :style="{ background: 'center / cover no-repeat url(' + image + ')' }">
-				<div class="relative shadow narrative">
+			<div v-if="imageExpanded" class="tw-absolute tw-shadow expanded-image" :style="{ background: 'center / cover no-repeat url(' + image + ')' }">
+				<div class="tw-relative tw-shadow narrative">
 					<div v-if="narrative">
 						<p>{{ narrative.comment }}</p>
 					</div>
@@ -45,55 +45,55 @@
 					</div>
 
 					<!-- Close button -->
-					<div @click="toggleImage" class="absolute close-button">
+					<div @click="toggleImage" class="tw-absolute close-button">
 						<v-icon>mdi-close</v-icon>
 					</div>
 				</div>
 			</div>
 
-			<p class="font-bold">
+			<p class="tw-font-bold">
 				{{ selectedQuestion.bodyText }}
 			</p>
 		</div>
 
 		<!-- Rating -->
-		<div v-if="selectedQuestion.type === 'AgreementScale'" class="px-6 py-3 pb-card-question-rating">
+		<div v-if="selectedQuestion.type === 'AgreementScale'" class="tw-px-6 tw-py-3 pb-card-question-rating">
 			<p>Do you agree or disagree?</p>
-			<div class="flex justify-between pb-3 rating-options">
-				<div @click="handleRating(1)" class="flex-1 flex flex-col rating-item-group" :class="rating && rating !== 1 ? 'opacity-25' : ''">
-					<span class="flex-1 pb-2 rating-item-text">
+			<div class="tw-flex tw-justify-between tw-pb-3 rating-options">
+				<div @click="handleRating(1)" class="tw-flex-1 tw-flex tw-flex-col rating-item-group" :class="rating && rating !== 1 ? 'tw-opacity-25' : ''">
+					<span class="tw-flex-1 tw-pb-2 rating-item-text">
 						Strongly Disagree
 					</span>
 					<div class="rating-item">
 						<span>1</span>
 					</div>
 				</div>
-				<div @click="handleRating(2)" class="flex-1 flex flex-col rating-item-group" :class="rating && rating !== 2 ? 'opacity-25' : ''">
-					<span class="flex-1 pb-2 rating-item-text">
+				<div @click="handleRating(2)" class="tw-flex-1 tw-flex tw-flex-col rating-item-group" :class="rating && rating !== 2 ? 'opacity-25' : ''">
+					<span class="tw-flex-1 tw-pb-2 rating-item-text">
 						Disagree
 					</span>
 					<div class="rating-item">
 						<span>2</span>
 					</div>
 				</div>
-				<div @click="handleRating(3)" class="flex-1 flex flex-col rating-item-group" :class="rating && rating !== 3 ? 'opacity-25' : ''">
-					<span class="flex-1 pb-2 rating-item-text">
+				<div @click="handleRating(3)" class="tw-flex-1 tw-flex tw-flex-col rating-item-group" :class="rating && rating !== 3 ? 'tw-opacity-25' : ''">
+					<span class="tw-flex-1 tw-pb-2 rating-item-text">
 						Undecided
 					</span>
 					<div class="rating-item">
 						<span>3</span>
 					</div>
 				</div>
-				<div @click="handleRating(4)" class="flex-1 flex flex-col rating-item-group" :class="rating && rating !== 4 ? 'opacity-25' : ''">
-					<span class="flex-1 pb-2 rating-item-text">
+				<div @click="handleRating(4)" class="tw-flex-1 tw-flex tw-flex-col rating-item-group" :class="rating && rating !== 4 ? 'tw-opacity-25' : ''">
+					<span class="tw-flex-1 tw-pb-2 rating-item-text">
 						Agree
 					</span>
 					<div class="rating-item">
 						<span>4</span>
 					</div>
 				</div>
-				<div @click="handleRating(5)" class="flex-1 flex flex-col rating-item-group" :class="rating && rating !== 5 ? 'opacity-25' : ''">
-					<span class="flex-1 pb-2 rating-item-text">
+				<div @click="handleRating(5)" class="tw-flex-1 tw-flex tw-flex-col rating-item-group" :class="rating && rating !== 5 ? 'tw-opacity-25' : ''">
+					<span class="tw-flex-1 tw-pb-2 rating-item-text">
 						Strongly Agree
 					</span>
 					<div class="rating-item">
@@ -104,8 +104,8 @@
 		</div>
 
 		<!-- Comment -->
-		<div v-if="selectedQuestion.type === 'AgreementScale' && rating && !savedComment.text" class="px-6 py-3 pb-card-question-comment">
-			<label for="comment-text-area" class="text-xs uppercase">Please add a comment to support your choice</label>
+		<div v-if="selectedQuestion.type === 'AgreementScale' && rating" class="tw-px-6 tw-py-3 pb-card-question-comment">
+			<label for="comment-text-area" class="tw-text-xs tw-uppercase">Please add a comment to support your choice</label>
 			<v-textarea outlined id="comment-text-area" name="comment-text-area" placeholder="e.g. They are far enough from the water's edge" v-model="comment" class="mt-2"></v-textarea>
 		</div>
 
@@ -122,10 +122,9 @@
 		</div>
 
 		<!-- Button Bar -->
-		<div class="p-2 flex justify-between pb-button-bar">
-			<v-btn text large color="secondary" @click="$emit('nextQuestion')">{{ selectedQuestion.type === 'Narrative' ? 'Next' : 'Skip Question' }}</v-btn>
-			<v-btn v-if="rating && !savedComment.text" text large color="success" @click="saveComment" :loading="saving" :disabled="!comment">Save Comment</v-btn>
-			<v-btn v-if="rating && savedComment.text" text large color="success" @click="$emit('nextQuestion')">Next Question</v-btn>
+		<div class="tw-p-2 tw-flex tw-justify-between pb-button-bar">
+			<v-btn text large color="secondary">Skip Question</v-btn>
+			<v-btn text large color="success">Save Comment</v-btn>
 		</div>
 	</div>
 </template>
@@ -238,17 +237,13 @@ export default Vue.extend({
 .pb-question-card {
 	pointer-events: all;
 	width: 400px;
-	margin-left: 20px;
+	margin-left: 210px;
 	border-radius: 1px;
 	background-color: #fff;
 	box-shadow: 1px 1px 13px 0 rgba(79, 94, 120, 0.14);
 	height: auto;
 	max-height: calc(100vh - 170px);
 	overflow: scroll;
-
-	&.left-margin {
-		margin-left: 210px;
-	}
 
 	.pb-card-header {
 		width: 100%;

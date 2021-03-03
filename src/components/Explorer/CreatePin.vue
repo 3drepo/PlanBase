@@ -14,7 +14,7 @@
 				<h5>To create a new pin, please create a new comment.</h5>
 				<v-select id="comment-category" :items="categories" v-model="comment.category" label="Choose A Category" dense outlined></v-select>
 				<v-textarea outlined name="add-comment-text-area" label="Comment" placeholder="e.g. They are far enough from the water's edge" v-model="comment.text"></v-textarea>
-				<div class="flex justify-end">
+				<div class="tw-flex tw-justify-end">
 					<v-btn color="success" text @click="savePin">Save Comment and Create New Pin</v-btn>
 				</div>
 			</div>

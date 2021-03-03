@@ -17,11 +17,11 @@
 		<div v-else class="app-container">
 			<Navbar v-if="config.showTitleBar" />
 			<ProgressBar v-if="config.showNavBar && user" />
-			<v-content>
+			<v-main>
 				<v-container fluid>
 					<router-view></router-view>
 				</v-container>
-			</v-content>
+			</v-main>
 		</div>
 	</v-app>
 </template>
@@ -67,6 +67,12 @@ export default Vue.extend({
 	async mounted() {
 		const urlParams = new URLSearchParams(window.location.search);
 		const id = urlParams.get('id');
+
+		if (!id) {
+			(window as any).location = '/?id=1';
+			return;
+		}
+
 		await (this as any).$store
 			.dispatch('init', id)
 			.then(() => {
@@ -117,8 +123,8 @@ function init() {
 		console.log('Initialising 3D Repo Viewer...');
 		//changeStatus('Loading Viewer...');
 
-		prepareViewer().then(function() {
-			initUnity().then(function() {
+		prepareViewer().then(function () {
+			initUnity().then(function () {
 				handleModelInput();
 			});
 		});
@@ -135,7 +141,7 @@ function init() {
 		//changeStatus('Loading Model...');
 
 		if (teamspaceId && modelId) {
-			UnityUtil.loadModel(teamspaceId, modelId).then(function() {
+			UnityUtil.loadModel(teamspaceId, modelId).then(function () {
 				console.log('Model loaded');
 
 				//changeStatus('');
@@ -152,20 +158,20 @@ function init() {
 		var unityLoaderPath = PREFIX + '/unity/Build/UnityLoader.js';
 
 		var unityLoaderScript = document.createElement('script');
-		return new Promise(function(resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			unityLoaderScript.async = true;
 			unityLoaderScript.addEventListener(
 				'load',
-				function() {
+				function () {
 					console.log('Loaded UnityLoader.js succesfully');
-					resolve();
+					resolve(null);
 				},
 				false
 			);
 
 			unityLoaderScript.addEventListener(
 				'error',
-				function(error) {
+				function (error) {
 					console.error('Error loading UnityLoader.js' + error);
 					reject('Error loading UnityLoader.js');
 				},
@@ -180,17 +186,17 @@ function init() {
 	}
 
 	function initUnity() {
-		return new Promise(function(resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			(window as any).Module.errorhandler = UnityUtil.onError;
 
 			UnityUtil.init(
-				function(error: any) {
+				function (error: any) {
 					console.error(error);
 				},
-				function(progress: number) {
+				function (progress: number) {
 					(window as any).planbase_progress_loaded = progress;
 				},
-				function(progress: number) {
+				function (progress: number) {
 					(window as any).planbase_model_loaded = progress;
 				}
 			);
@@ -200,12 +206,12 @@ function init() {
 			UnityUtil.loadUnity('unity', PREFIX + '/unity/Build/unity.json', 2130706432 / 10);
 
 			UnityUtil.onReady()
-				.then(function() {
+				.then(function () {
 					//changeStatus('');
 					resolve();
 
 					UnityUtil.viewer = {
-						objectSelected: function(pointInfo: any) {
+						objectSelected: function (pointInfo: any) {
 							if (pointInfo.id && pointInfo.pin) {
 								window.dispatchEvent(
 									new CustomEvent('CLICK_PIN', {
@@ -214,14 +220,14 @@ function init() {
 								);
 							}
 						},
-						pickPointEvent: function(pointInfo: any) {
+						pickPointEvent: function (pointInfo: any) {
 							if (pointInfo.position && pointInfo.position.length > 0) {
 								//UnityUtil.dropIssuePin('test', pointInfo.position, [], [133, 133, 133]);
 							}
 						},
 					};
 				})
-				.catch(function(error: any) {
+				.catch(function (error: any) {
 					console.error('UnityUtil.onReady failed: ' + error);
 					reject(error);
 				});

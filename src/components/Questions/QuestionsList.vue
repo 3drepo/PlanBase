@@ -4,15 +4,15 @@
 		<div
 			v-for="(question, qIndex) in questions"
 			:key="`question-` + qIndex"
-			class="p-3 cursor-pointer pb-question"
+			class="tw-p-3 tw-cursor-pointer pb-question"
 			:class="selectedQuestion.id == question.id ? 'active' : ''"
 			@click="selectQuestion(qIndex)"
 		>
-			<div class="rounded-full pb-pill">
+			<div class="tw-rounded-full pb-pill">
 				<v-icon v-if="question.type === 'AgreementScale'">mdi-chat-processing-outline</v-icon>
 				<v-icon v-else>mdi-bookmark</v-icon>
 			</div>
-			<span class="pb-question-title" :class="selectedQuestion.id == question.id ? 'text-white' : ''">{{ question.title }}</span>
+			<span class="pb-question-title" :class="selectedQuestion.id == question.id ? 'tw-text-white' : ''">{{ question.title }}</span>
 		</div>
 	</div>
 </template>

@@ -208,15 +208,6 @@ export default new Vuex.Store({
 			commit('toggleLoading', true);
 			commit('setConfig', null);
 
-			// If no URL param is provided
-			if (!id) {
-				// commit('setErrorMessage', 'No model id provided');
-				// // commit('toggleLoading', false);
-				// commit('toggleLoading', false);
-				// return;
-				(window as any).location = '/?id=1';
-			}
-
 			// Look for config file with matching id provided in URL param
 			try {
 				var configResponse = await axios.get(`/${id}.json`);
@@ -339,7 +330,7 @@ export default new Vuex.Store({
 					...data,
 					jwt,
 				},
-				withCredentials: false
+				withCredentials: false,
 			}).catch(err => console.log(err));
 
 			if (!res) return;

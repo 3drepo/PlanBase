@@ -33,16 +33,12 @@
 			<span>Do you agree with this comment?</span>
 			<div class="pb-thumb">
 				<v-icon class="positive" @click="upVote">mdi-thumb-up</v-icon>
-				<span class="positive" :class="hasVoted ? 'visible' : 'invisible'"
-					>{{ upVotedPercentage || 0 }}%</span
-				>
+				<span class="positive" :class="hasVoted ? 'visible' : 'invisible'">{{ upVotedPercentage || 0 }}%</span>
 			</div>
 
 			<div class="pb-thumb">
 				<v-icon class="negative" @click="downVote">mdi-thumb-down</v-icon>
-				<span class="negative" :class="hasVoted ? 'visible' : 'invisible'"
-					>{{ downVotedPercentage || 0 }}%</span
-				>
+				<span class="negative" :class="hasVoted ? 'visible' : 'invisible'">{{ downVotedPercentage || 0 }}%</span>
 			</div>
 		</div>
 		<!-- <<< Comment Voting -->

@@ -1,14 +1,14 @@
 <template>
 	<div class="pb-overview-container" :style="`background-image: url('` + overview.backgroundUrl + `');`">
 		<div class="pb-overview-card">
-			<div class="p-6 pb-card-intro">
-				<h3 class="pb-2">{{ overview.title }}</h3>
-				<p>{{ overview.bodyText | cleanHtml }}</p>
+			<div class="tw-p-6 pb-card-intro">
+				<h3 class="tw-pb-2">{{ overview.title }}</h3>
+				<p>{{ overview.bodyText }}</p>
 			</div>
 			<div class="pb-card-stages">
-				<div class="p-6 flex flex-col pb-stage-item">
-					<div class="flex-1 pb-stage-item-description">
-						<h3 class="pb-2">1. Questions</h3>
+				<div class="tw-p-6 tw-flex tw-flex-col pb-stage-item">
+					<div class="tw-flex-1 pb-stage-item-description">
+						<h3 class="tw-pb-2">1. Questions</h3>
 						<p>
 							Through our continuous engagement with GLA, the CIC partners as well as our own research with residents and multiple planning professionals, we have identified and
 							addressed the biggest barriers to participation during community engagement.
@@ -18,9 +18,9 @@
 						<router-link to="/questions">START QUESTIONS</router-link>
 					</div>
 				</div>
-				<div v-if="config.showExplorer" class="p-6 flex flex-col pb-stage-item">
-					<div class="flex-1 pb-stage-item-description">
-						<h3 class="pb-2">2. Explorer</h3>
+				<div class="tw-p-6 tw-flex tw-flex-col pb-stage-item">
+					<div class="tw-flex-1 pb-stage-item-description">
+						<h3 class="tw-pb-2">2. Explorer</h3>
 						<p>
 							Local planning authorities and residents review the submissions and comment on them directly in 3D depending on topics such as Design, Environment, Property,
 							Transport, Education,Health, Community, Leisure, etc;

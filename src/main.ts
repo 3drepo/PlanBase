@@ -5,10 +5,11 @@ import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
 import '@mdi/font/css/materialdesignicons.css';
-import '@/main.scss';
+import './main.scss';
 
 // Cookies
 import VueCookies from 'vue-cookies';
+
 Vue.use(VueCookies);
 Vue.$cookies.config('7d', '', '', false, 'Lax');
 
