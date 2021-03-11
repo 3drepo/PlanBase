@@ -229,6 +229,10 @@ export default new Vuex.Store({
 
 			if (!res) return;
 
+			let groups = await apiManager.getGroups();
+
+			console.log(groups);
+
 			const questions = res[2].map((w: WalkthroughPoint) => {
 				const imageUrl = w.thumbnailUrl;
 				return {

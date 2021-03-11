@@ -61,6 +61,8 @@ export default class ApiManager {
 	async getWalkthroughPoints(): Promise<WalkthroughPoint[]> {
 		let issues = await this.apiClient.getIssues(this.teamspaceId, this.modelId);
 
+		console.log(issues);
+
 		return issues
 			.filter(i => i.topic_type === 'Question' || i.topic_type === 'Walkthrough')
 			.map(i => ({
@@ -79,24 +81,10 @@ export default class ApiManager {
 			}));
 	}
 
-	async getUserPins(): Promise<WalkthroughPoint[]> {
-		let issues = await this.apiClient.getIssues(this.teamspaceId, this.modelId);
 
-		return issues
-			.filter(i => i.topic_type === 'Question' || i.topic_type === 'Walkthrough')
-			.map(i => ({
-				id: i._id,
-				title: i.name,
-				bodyText: i.desc,
-				type: i.topic_type === 'Question' ? 'AgreementScale' : 'Narrative',
-				thumbnailUrl: i.viewpoint.screenshot + '?key=' + this.apiKey,
-				position: i.position,
-				viewpoint: {
-					position: i.viewpoint.position,
-					up: i.viewpoint.up,
-					lookAt: i.viewpoint.look_at,
-					viewDir: i.viewpoint.view_dir,
-				},
-			}));
+	async getGroups(): Promise<TdrGroup[]> {
+		let groups = await this.apiClient.getGroups(this.teamspaceId, this.modelId);
+
+		return groups;
 	}
 }

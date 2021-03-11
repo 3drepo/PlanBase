@@ -11,11 +11,24 @@ type TdrIssue = {
 	position: number[];
 	viewpoint: {
 		screenshot: string;
+		screenshotSmall: string;
 		position: number[];
 		look_at: number[];
 		up: number[];
 		view_dir: number[];
+		override_group_ids?: string[];
+		hidden_group_id?: string;
 	};
+};
+
+type TdrGroup = {
+	_id: string;
+	name: string;
+	description: string;
+	color: [number, number, number];
+	author: string;
+	issue_id: string;
+	objects: { account: string; model: string; ifc_guids: []; shared_ids: string[] }[];
 };
 
 type TdrResource = {

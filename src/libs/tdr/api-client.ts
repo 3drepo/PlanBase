@@ -73,4 +73,16 @@ export default class ApiClient {
 				return { tree, treePath };
 			});
 	}
+
+	getGroups(teamspaceId: string, modelId: string): Promise<TdrGroup[]> {
+		return axios.get(this.baseApiUrl + '/' + teamspaceId + '/' + modelId + '/revision/master/head/groups?key=' + this.apiKey).then(res => {
+			return res.data;
+		});
+	}
+
+	getGroup(teamspaceId: string, modelId: string, groupId: string): Promise<TdrGroup> {
+		return axios.get(this.baseApiUrl + '/' + teamspaceId + '/' + modelId + '/revision/master/head/groups/' + groupId + '?key=' + this.apiKey).then(res => {
+			return res.data;
+		});
+	}
 }
