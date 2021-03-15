@@ -25,10 +25,11 @@ type TdrGroup = {
 	_id: string;
 	name: string;
 	description: string;
-	color: [number, number, number];
+	color: [number, number, number, number];
 	author: string;
 	issue_id: string;
 	objects: { account: string; model: string; ifc_guids: []; shared_ids: string[] }[];
+	meshIds?: any[];
 };
 
 type TdrResource = {
@@ -48,7 +49,11 @@ type WalkthroughPoint = {
 		lookAt: number[];
 		up: number[];
 		viewDir: number[];
+		overrideGroupIds?: string[];
+		hiddenGroupId?: string;
 	};
+	overrideGroups?: TdrGroup[];
+	hiddenGroups?: TdrGroup[];
 };
 
 type ProjectOverview = {
@@ -56,6 +61,7 @@ type ProjectOverview = {
 	bodyText: string;
 	logoUrl: string;
 	backgroundUrl: string;
+	// idMap: any;
 };
 
 type ProjectSummary = {

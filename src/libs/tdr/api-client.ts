@@ -85,4 +85,11 @@ export default class ApiClient {
 			return res.data;
 		});
 	}
+
+	getIdMap(teamspaceId: string, modelId: string): Promise<any> {
+		// https://www.3drepo.io/api/PlanBase/b1974e30-7dc3-11eb-866f-9178b76b7801/revision/master/head/idmap.json
+		return axios.get(this.baseApiUrl + '/' + teamspaceId + '/' + modelId + '/revision/master/head/idmap.json' + '?key=' + this.apiKey).then(res => {
+			return res.data;
+		});
+	}
 }

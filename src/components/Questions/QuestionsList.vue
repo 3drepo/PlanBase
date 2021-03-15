@@ -54,15 +54,17 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .pb-questions-list-container {
-	pointer-events: all;
+	background: #fff;
 	font-family: Roboto, sans-serif;
+	height: auto;
+	left: 0;
+	max-height: calc(100vh - 170px);
+	min-height: 396px;
+	min-width: 196px;
+	overflow: scroll;
+	pointer-events: all;
 	position: absolute;
 	top: 24px;
-	left: 0;
-	min-width: 145px;
-	height: auto;
-	max-height: calc(100vh - 170px);
-	overflow: scroll;
 	.pb-questions-list-header {
 		background: #fafafa;
 		border-bottom: 1px solid #eee;

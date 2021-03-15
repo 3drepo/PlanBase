@@ -18,6 +18,10 @@ interface Question extends WalkthroughPoint {
 	// viewpoint: { position: number[]; lookAt: number[] };
 	rating: null | number;
 	comment: null | string;
+	narrative: {
+		image: string;
+		comment: string;
+	};
 }
 
 interface Pin {
@@ -44,6 +48,7 @@ interface Overview {
 	bodyText: string;
 	logoUrl: string;
 	backgroundUrl: string;
+	// idMap: string | null;
 }
 
 interface Summary {
