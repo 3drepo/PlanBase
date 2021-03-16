@@ -18,7 +18,6 @@
 import QuestionsList from '@/components/Questions/QuestionsList.vue';
 import Question from '@/components/Questions/Question.vue';
 import { mapGetters } from 'vuex';
-import addQuarters from 'date-fns/addQuarters';
 
 // /**
 // 	 * Add an issue pin
@@ -73,63 +72,55 @@ export default {
 	methods: {
 		// NOTE: #2 This is triggered every time as new question is chosen and sets the visibilty options. It takes the new question as an arg
 		setVisibilityOptions(q: Question) {
-			// Color/Opacity override
+			// Color/Opacity
 			if (q.overrideGroups && q.overrideGroups.length) {
-				console.log('override groups detected');
-				console.log(q.overrideGroups);
 				q.overrideGroups.map((g: TdrGroup) => {
 					const account = (window as any).config.teamspaceId;
-					const modelId = (window as any).config.modelId;
+					const modelId = g.objects[0].model;
 					const meshIds = g.meshIds;
-					const color: number[] = [g.color[0], g.color[1], g.color[2]];
+					const color: number[] = g.color.map(v => v / 255);
 					const opacity: number = g.color[3] ? g.color[3] / 255 : 1;
-					// FIXME: Below here not working as meshIds are incorrect I think
-					// console.log('over riding color');
-					// (window as any).UnityUtil.overrideMeshColor(account, modelId, meshIds, color);
-					// console.log('over riding opacity');
-					// (window as any).UnityUtil.overrideMeshOpacity(account, modelId, meshIds, opacity);
+					(window as any).UnityUtil.overrideMeshColor(account, modelId, meshIds, color);
+					(window as any).UnityUtil.overrideMeshOpacity(account, modelId, meshIds, opacity);
 				});
 			}
 
 			// Visibilty
 			if (q.hiddenGroups && q.hiddenGroups.length) {
 				const account = (window as any).config.teamspaceId;
-				const modelId = (window as any).config.modelId;
+				const modelId = (q as any).hiddenGroups[0].objects[0].model;
 				const meshIds = (q as any).hiddenGroups[0].meshIds[0];
 				const visibility = false;
-				// FIXME: Below here not working as meshIds are incorrect I think
-				// (window as any).UnityUtil.toggleVisibility(account, modelId, meshIds, visibility);
+				(window as any).UnityUtil.toggleVisibility(account, modelId, meshIds, visibility);
 			}
 		},
 
 		// NOTE: #3 Same as above but takes the old question and resets the visibility options
 		resetVisibilityOptions(q: Question) {
+			// Color/Opacity
 			if (q.overrideGroups && q.overrideGroups.length) {
 				q.overrideGroups.map((g: TdrGroup) => {
 					const account = (window as any).config.teamspaceId;
-					const modelId = (window as any).config.modelId;
-					const meshIds = [...g.objects[0].shared_ids];
-					// FIXME: Below here not working as meshIds are incorrect I think
-					// console.log('reseting color');
-					// (window as any).UnityUtil.resetMeshColor(account, modelId, meshIds);
-					// console.log('reseting opacity');
-					// (window as any).UnityUtil.resetMeshOpacity(account, modelId, meshIds);
+					const modelId = g.objects[0].model;
+					const meshIds = g.meshIds;
+					(window as any).UnityUtil.resetMeshColor(account, modelId, meshIds);
+					(window as any).UnityUtil.resetMeshOpacity(account, modelId, meshIds);
 				});
 			}
+			// Visibility
 			if (q.hiddenGroups && q.hiddenGroups.length) {
 				const account = (window as any).config.teamspaceId;
-				const modelId = (window as any).config.modelId;
-				const meshIds = [...q.hiddenGroups[0].objects[0].shared_ids];
+				const modelId = (q as any).hiddenGroups[0].objects[0].model;
+				const meshIds = (q as any).hiddenGroups[0].meshIds[0];
 				const visibility = true;
-				// FIXME: Below here not working as meshIds are incorrect I think
-				// (window as any).UnityUtil.toggleVisibility(account, modelId, meshIds, visibility);
+				(window as any).UnityUtil.toggleVisibility(account, modelId, meshIds, visibility);
 			}
 		},
 
 		questionSelected(question: Question) {
-			console.log(question);
+			const previousQuestion = { ...(this as any).selectedQuestion };
+			(this as any).resetVisibilityOptions(previousQuestion);
 			(this as any).setVisibilityOptions(question);
-			// (this as any).resetVisibilityOptions(question);
 			(this as any).selectedQuestion = { ...question, time: Date.now() };
 		},
 
@@ -148,7 +139,6 @@ export default {
 
 			//  If last question, got to pin explorer
 			if (qIndex === questions.length - 1) {
-				// console.log('navigate to pin explorer...');
 				return;
 			}
 
@@ -157,12 +147,6 @@ export default {
 	},
 
 	mounted() {
-		// console.log('Questions view mounted');
-		// (this as any).questions.map((q: WalkthroughPoint) => {
-		// console.log('q');
-		// console.log(q);
-
-		// });
 		if ((this as any).config.showNarrativePins)
 			(this as any).questions.map((q: WalkthroughPoint) => {
 				if (q.position && q.position.length > 0) (window as any).UnityUtil.dropIssuePin(q.id, q.position, [], [255, 0, 0]);

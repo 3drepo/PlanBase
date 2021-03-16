@@ -13,9 +13,6 @@ export default class ApiManager {
 		// NOTE: #4 Added 'Clash' as a temporary fix for the federations but don't think it should be here
 		let results = issues.filter(i => i.topic_type === 'For information' || i.topic_type === 'Clash');
 
-		console.log('results');
-		console.log(results);
-
 		if (results.length === 0)
 			return {
 				title: 'Not loaded.',
@@ -76,7 +73,7 @@ export default class ApiManager {
 
 		return (
 			issues
-				// NOTE: #4 Added 'Clash' as a temporary fix for the federations but don't think it should be here
+				// NOTE: #5 Added 'Clash' as a temporary fix for the federations but don't think it should be here
 				.filter(i => i.topic_type === 'Question' || i.topic_type === 'Walkthrough' || i.topic_type === 'Clash')
 				.map(i => ({
 					id: i._id,
