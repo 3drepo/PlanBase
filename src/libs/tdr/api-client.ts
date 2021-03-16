@@ -69,7 +69,7 @@ export default class ApiClient {
 			})
 			.then(res => {
 				treePath = res.data.subModels[0].idToPath;
-				console.log(res);
+				// console.log(res);
 				return { tree, treePath };
 			});
 	}

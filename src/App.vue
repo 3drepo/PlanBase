@@ -205,17 +205,12 @@ function init() {
 
 			UnityUtil.loadUnity('unity', PREFIX + '/unity/Build/unity.json', 2130706432 / 10);
 
-			console.log('here I am');
-
 			// UnityUtil.overrideMeshColor(account, model, meshIds, color)
 
 			UnityUtil.onReady()
 				.then(function() {
 					//changeStatus('');
 					resolve('');
-
-					// console.log('onReady');
-					// console.log(window);
 
 					UnityUtil.viewer = {
 						objectSelected: function(pointInfo: any) {

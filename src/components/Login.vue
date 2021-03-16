@@ -84,7 +84,7 @@ export default Vue.extend({
 			// 	},
 			// }).catch(err => console.log(err));
 
-			console.log(response);
+			// console.log(response);
 
 			if (response && response.data.success && email && postcode) {
 				const user = { email, postcode, jwt: response.data.jwt };
