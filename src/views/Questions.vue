@@ -130,7 +130,7 @@ export default {
 			//  If first question, do nothing
 			if (!qIndex) return;
 
-			(this as any).selectedQuestion = (this as any).questions[qIndex - 1];
+			(this as any).questionSelected((this as any).questions[qIndex - 1]);
 		},
 
 		nextQuestion() {
@@ -142,7 +142,7 @@ export default {
 				return;
 			}
 
-			(this as any).selectedQuestion = questions[qIndex + 1];
+			(this as any).questionSelected(questions[qIndex + 1]);
 		},
 	},
 
