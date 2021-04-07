@@ -61,7 +61,7 @@ export default Vue.extend({
 	max-height: calc(100vh - 170px);
 	min-height: 396px;
 	min-width: 196px;
-	overflow: scroll;
+	overflow: auto;
 	pointer-events: all;
 	position: absolute;
 	top: 24px;
