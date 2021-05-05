@@ -17,8 +17,9 @@ const baseUrl = 'https://0zi7k1xq57.execute-api.eu-west-1.amazonaws.com/producti
 
 Vue.use(Vuex);
 
-import { format, isThisSecond } from 'date-fns';
+import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
+import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 export default new Vuex.Store({
 	state: {
@@ -36,11 +37,14 @@ export default new Vuex.Store({
 			jwt: null,
 		},
 
+		// modelGroup:
+
 		overview: {
 			title: '',
 			bodyText: '',
 			logoUrl: '',
 			backgroundUrl: '',
+			idMap: null,
 		} as Overview,
 
 		// These are 3dRepo issues that have been created by Planbase Admin
@@ -218,7 +222,6 @@ export default new Vuex.Store({
 
 			const config: Config = configResponse.data;
 
-			console.log(config);
 			(window as any).config = config;
 
 			commit('setConfig', config);
@@ -229,8 +232,74 @@ export default new Vuex.Store({
 
 			if (!res) return;
 
+			// NOTE: #1 Add groups and the submodel information to the issues/questions
+			// If you use the getGroups API call on those you get:
+			// https://www.3drepo.io/api/PlanBase/b1974e30-7dc3-11eb-866f-9178b76b7801/revision/master/head/groups/d3df7070-7dc4-11eb-ba3f-df4897718ad6
+			let groups = await apiManager.getGroups();
+
+			// Before you start calling UnityUtils you will also need to call getIdMap here:
+			// https://www.3drepo.io/api/PlanBase/b1974e30-7dc3-11eb-866f-9178b76b7801/revision/master/head/idmap.json
+			// and use the result later
+			let idMap = await apiManager.getIdMap();
+
+			// If there are more than one submodel then flatten into single map
+			const subModels = idMap.subModels.reduce((acc: any, cur: { idMap: string[] }) => {
+				acc = { ...acc, ...cur.idMap };
+				return acc;
+			}, {});
+
 			const questions = res[2].map((w: WalkthroughPoint) => {
 				const imageUrl = w.thumbnailUrl;
+				const overrideGroups: TdrGroup[] = [];
+				const hiddenGroups: TdrGroup[] = [];
+
+				// If this WalkthroughPoint contains overrideGroupIds
+				if (w.viewpoint.overrideGroupIds) {
+					w.viewpoint.overrideGroupIds.map((id: string) => {
+						// Find the group that matches this overrideGroupId
+						const og = groups.find((g: TdrGroup) => g._id === id);
+						if (og) {
+							// Loop through objects in this group and find meshIds
+							// meshIDs = array of the result of getting the values from the shared_ids from the above
+							// array when compared with the relevant subModels object from the idmap.json called earlier
+							const meshIds = og.objects.map((obj: { shared_ids: string[] }) => {
+								const keys = [];
+								// Loop through each key in the flattened subModels
+								for (let key in subModels) {
+									const value = subModels[key];
+									// If this object has a shared_id that matches val in subModels then store the key for this val
+									if (obj.shared_ids.includes(value)) {
+										keys.push(key);
+									}
+								}
+								return keys;
+							});
+							overrideGroups.push({ ...og, meshIds: meshIds.reduce((acc, val) => acc.concat(val), []) });
+						}
+					});
+				}
+
+				// If this WalkthroughPoint has a hiddenGroupId
+				if (w.viewpoint.hiddenGroupId) {
+					// Find the group that matches this overrideGroupId
+					const hg = groups.find((g: TdrGroup) => g._id === w.viewpoint.hiddenGroupId);
+					if (hg) {
+						// Loop through objects in this group
+						const meshIds = hg.objects.map((obj: { shared_ids: string[] }) => {
+							const keys = [];
+							// Loop through each key in the flattened subModels
+							for (let key in subModels) {
+								const value = subModels[key];
+								// If this object has a shared_id that matches val in subModels then store the key for this val
+								if (obj.shared_ids.includes(value)) {
+									keys.push(key);
+								}
+							}
+							return keys;
+						});
+						hiddenGroups.push({ ...hg, meshIds });
+					}
+				}
 				return {
 					id: w.id,
 					title: w.title,
@@ -245,6 +314,8 @@ export default new Vuex.Store({
 					},
 					comment: null,
 					rating: null,
+					overrideGroups,
+					hiddenGroups,
 				} as Question;
 			});
 

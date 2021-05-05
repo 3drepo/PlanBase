@@ -70,7 +70,57 @@ export default {
 	},
 
 	methods: {
-		questionSelected(question: any) {
+		// NOTE: #2 This is triggered every time as new question is chosen and sets the visibilty options. It takes the new question as an arg
+		setVisibilityOptions(q: Question) {
+			// Color/Opacity
+			if (q.overrideGroups && q.overrideGroups.length) {
+				q.overrideGroups.map((g: TdrGroup) => {
+					const account = (window as any).config.teamspaceId;
+					const modelId = g.objects[0].model;
+					const meshIds = g.meshIds;
+					const color: number[] = g.color.map(v => v / 255);
+					const opacity: number = g.color[3] ? g.color[3] / 255 : 1;
+					(window as any).UnityUtil.overrideMeshColor(account, modelId, meshIds, color);
+					(window as any).UnityUtil.overrideMeshOpacity(account, modelId, meshIds, opacity);
+				});
+			}
+
+			// Visibilty
+			if (q.hiddenGroups && q.hiddenGroups.length) {
+				const account = (window as any).config.teamspaceId;
+				const modelId = (q as any).hiddenGroups[0].objects[0].model;
+				const meshIds = (q as any).hiddenGroups[0].meshIds[0];
+				const visibility = false;
+				(window as any).UnityUtil.toggleVisibility(account, modelId, meshIds, visibility);
+			}
+		},
+
+		// NOTE: #3 Same as above but takes the old question and resets the visibility options
+		resetVisibilityOptions(q: Question) {
+			// Color/Opacity
+			if (q.overrideGroups && q.overrideGroups.length) {
+				q.overrideGroups.map((g: TdrGroup) => {
+					const account = (window as any).config.teamspaceId;
+					const modelId = g.objects[0].model;
+					const meshIds = g.meshIds;
+					(window as any).UnityUtil.resetMeshColor(account, modelId, meshIds);
+					(window as any).UnityUtil.resetMeshOpacity(account, modelId, meshIds);
+				});
+			}
+			// Visibility
+			if (q.hiddenGroups && q.hiddenGroups.length) {
+				const account = (window as any).config.teamspaceId;
+				const modelId = (q as any).hiddenGroups[0].objects[0].model;
+				const meshIds = (q as any).hiddenGroups[0].meshIds[0];
+				const visibility = true;
+				(window as any).UnityUtil.toggleVisibility(account, modelId, meshIds, visibility);
+			}
+		},
+
+		questionSelected(question: Question) {
+			const previousQuestion = { ...(this as any).selectedQuestion };
+			(this as any).resetVisibilityOptions(previousQuestion);
+			(this as any).setVisibilityOptions(question);
 			(this as any).selectedQuestion = { ...question, time: Date.now() };
 		},
 
@@ -80,7 +130,7 @@ export default {
 			//  If first question, do nothing
 			if (!qIndex) return;
 
-			(this as any).selectedQuestion = (this as any).questions[qIndex - 1];
+			(this as any).questionSelected((this as any).questions[qIndex - 1]);
 		},
 
 		nextQuestion() {
@@ -89,11 +139,10 @@ export default {
 
 			//  If last question, got to pin explorer
 			if (qIndex === questions.length - 1) {
-				// console.log('navigate to pin explorer...');
 				return;
 			}
 
-			(this as any).selectedQuestion = questions[qIndex + 1];
+			(this as any).questionSelected(questions[qIndex + 1]);
 		},
 	},
 
@@ -103,6 +152,7 @@ export default {
 				if (q.position && q.position.length > 0) (window as any).UnityUtil.dropIssuePin(q.id, q.position, [], [255, 0, 0]);
 			});
 		(this as any).selectedQuestion = (this as any).questions[0];
+		(this as any).questionSelected((this as any).questions[0]);
 
 		window.addEventListener('CLICK_PIN', (object: any) => {
 			(this as any).questions.forEach((q: any) => {
