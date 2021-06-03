@@ -36,19 +36,62 @@
 		<!-- This tag imports the standard unity-util.js from production, as is done in vanilla PlanBase -->
 		<script type="text/javascript" src="https://www.3drepo.io/unity/unity-util.js"></script>
 		
+		<!-- This tag hooks a number of UnityUtil methods so that we can see how the Unity client behaves, in order to 
+		match it with Unreal-->
+		<script type="text/javascript">
+			UnityUtil.loading = function(bboxstr){
+				console.log("LOADING");
+				console.log(bboxstr);
+				UnityUtil.loadingResolve.resolve();
+			}
+
+			var loadedMethod = UnityUtil.loaded;
+			UnityUtil.loaded = function(bboxStr){
+				console.log("LOADED");
+				console.log(bboxStr);
+				loadedMethod(bboxStr);
+			}
+
+			var loadingProgressMethod = UnityUtil.loadingProgress;
+			UnityUtil.loadingProgress = function(progress){
+				console.log("PROGRESS");
+				console.log(progress);
+				loadingProgressMethod(progress);
+			}
+		</script>
+
 		<!-- This snippet overrides a number of UnityUtil static methods, to skip loading the Unity Viewer and forward
 		its api calls to Unreal instead. This snippet also tells the Pixel Streaming code where to find the signalling
 		server, as the server hosting this page will be the PlanBase one -->
 		<script type="text/javascript">
+
+			return; // Comment or uncomment to swap between Unity and Unreal PlanBase
+
 			console.log("Unreal PlanBase Dev Loading Override");
-			UnityUtil._loadUnity = function(canvas,url){		
-				UnityUtil.toUnity = function(n,r,p){ // Override this after "Unity" is "loaded" because putting it before breaks the promise
+
+			UnityUtil.loadUnity = function(canvas,url){
+				
+				// Create the shim unity instance, implementing the two methods used by UnityUtil
+				UnityUtil.unityInstance = {};
+				UnityUtil.unityInstance.SendMessage = function(go, n, p){
 					console.log(n);
-					console.log(r);
 					console.log(p);
-					emitUIInteraction({methodName: n, requireStatus: r, params: p});
+					emitUIInteraction({methodName: n, params: p});
 				}
+				UnityUtil.unityInstance.Quit = function(){
+					console.log("quit");
+				}
+
+				// Create the Player div that the Pixel Streaming browser side code will look for under which to place the video
+				divDom = document.getElementById("viewer");
+				playerDom = document.createElement("player");
+				playerDom.id = "player";
+				divDom.appendChild(playerDom);
+
+				load(); // This starts the initialisation of the Pixel Streaming components
+				return UnityUtil.onReady(); // This promise is fulfilled by calling UnityUtil.ready()
 			}
+
 			// onDataChannelConnected is defined in app.js, and with our modification 
 			// (see https://github.com/3drepo/3drepoUnreal/commit/77b46c75139182d976f05ac2dc9b9264b2e84ea6) 
 			// will be called when the Rtc DataChannel is opened. Only when the data channel is open is it safe to send messages to Unreal.
@@ -72,9 +115,11 @@
 			// A callback for a pixel streaming response from Unreal.
 			function handleResponse(data){
 				console.log(data);
-				switch(data){
-					case "Loaded":
+				var response = JSON.parse(data);
+				switch(response.methodName){
+					case "loaded":
 						UnityUtil.loadingProgress(2); // This is necessary to enable the Start Questions button
+						UnityUtil.loaded(response.args);
 				}
 			}
 
@@ -88,14 +133,14 @@
 		</script>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" />
 	</head>
-	<body onload="load()">
+	<body>
 		<noscript>
 			<strong>We're sorry but Planbase doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
 		</noscript>
 		
 		<!-- The player tag will host the Pixel Streaming content. We leave unity here to swap between them easily. 
 			player will replace unity in a full version using pixelstreaming. -->
-		<div id="viewer"><div id="unity"></div><div id="player"></div></div>
+		<div id="viewer"><div id="unity"></div></div>
 		<div id="app"></div>
 		<!-- built files will be auto injected -->
 	</body>
