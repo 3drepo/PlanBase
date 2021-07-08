@@ -26,10 +26,10 @@
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" />
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" />
 
-		<!-- These links and scripts import the Unreal Pixel Streaming browser side code. The Pixel Streaming window (div) is
-		created when load() is called. -->
-		<link type="text/css" rel="stylesheet" href="http://localhost/player.css">
+		<!-- These links and scripts import the Unreal Pixel Streaming browser side depdendencies. Once loaded a PixelStreaming instance
+		can be created through UnityUtil.loadUnreal() -->
 		<script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+		<link type="text/css" rel="stylesheet" href="http://localhost/player.css">
 		<script type="text/javascript" src="http://localhost/scripts/webRtcPlayer.js"></script>
 		<script type="text/javascript" src="http://localhost/scripts/app.js"></script>
 		
@@ -41,8 +41,11 @@
 		<script type="text/javascript">
 			//return; // Comment or uncomment to swap between Unity and Unreal PlanBase
 			// Until we have an API, this is how we set the backend
-			UnityUtil.loadUnity = UnityUtil.loadUnreal;
+			UnityUtil.loadUnity = function(div, uri){
+				UnityUtil.loadUnreal(div, {serverUri: "ws://localhost/", autoConnect: false});
+			}
 		</script>
+
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" />
 	</head>
 	<body>
