@@ -9,7 +9,7 @@
 	"showNarrativePins": true,
 	"showThumbnails": true,
 	"showExplorer": true,
-	"baseApiUrl": "https://api3.www.3drepo.io/api",
+	"baseApiUrl": "https://www.3drepo.io/api",
 	"viewer": "unreal",
 	"unrealConfig": {
 		"baseResourcesUrl": "http://u1.planbase.3drepo.io",
