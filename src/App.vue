@@ -155,34 +155,93 @@ function init() {
 	}
 
 	function prepareViewer() {
-		var unityLoaderPath = PREFIX + '/unity/Build/UnityLoader.js';
+		const viewer = (window as any).config.viewer;
+		if (viewer == 'unreal') {
+			return prepareUnrealViewer();
+		} else if (viewer == 'unity') {
+			return prepareUnityViewer();
+		} else {
+			console.error(`config.viewer value ${viewer} is not valid. Should be unreal or unity. Defaulting to Unity.`);
+			(window as any).config.viewer = 'unity';
+			return prepareUnityViewer(); // Default to Unity
+		}
+	}
 
-		var unityLoaderScript = document.createElement('script');
+	function importScript(url: URL) {
+		var tag = document.createElement('script');
 		return new Promise(function(resolve, reject) {
-			unityLoaderScript.async = true;
-			unityLoaderScript.addEventListener(
+			tag.async = true;
+			tag.addEventListener(
 				'load',
 				function() {
-					console.log('Loaded UnityLoader.js succesfully');
+					console.log(`Loaded ${url} succesfully`);
 					resolve(null);
 				},
 				false
 			);
 
-			unityLoaderScript.addEventListener(
+			tag.addEventListener(
 				'error',
 				function(error) {
-					console.error('Error loading UnityLoader.js' + error);
-					reject('Error loading UnityLoader.js');
+					console.error(`Error loading  ${url} ` + error);
+					reject(`Error loading  ${url}`);
 				},
 				false
 			);
 			// Event handlers MUST come first before setting src
-			unityLoaderScript.src = unityLoaderPath;
+			tag.src = url.toString();
 
 			// This kicks off the actual loading of Unity
-			viewer.appendChild(unityLoaderScript);
+			viewer.appendChild(tag);
 		});
+	}
+
+	function importLink(url: URL) {
+		var tag = document.createElement('link');
+		return new Promise(function(resolve, reject) {
+			tag.rel = 'stylesheet';
+			tag.addEventListener(
+				'load',
+				function() {
+					console.log(`Loaded ${url} succesfully`);
+					resolve(null);
+				},
+				false
+			);
+
+			tag.addEventListener(
+				'error',
+				function(error) {
+					console.error(`Error loading  ${url} ` + error);
+					reject(`Error loading  ${url}`);
+				},
+				false
+			);
+			// Event handlers MUST come first before setting src
+			tag.href = url.toString();
+
+			// This kicks off the actual loading of Unity
+			viewer.appendChild(tag);
+		});
+	}
+
+	/**
+	 * This function loads the Unreal pixel streaming dependencies
+	 */
+	function prepareUnrealViewer() {
+		const unrealConfig = (window as any).config.unrealConfig;
+		const baseUrl = unrealConfig.baseResourcesUrl;
+		return Promise.all([
+			importLink(new URL(baseUrl + '/player.css')),
+			importScript(new URL(unrealConfig.adapterUrl)),
+			importScript(new URL(baseUrl + '/webRtcPlayer.js')),
+			importScript(new URL(baseUrl + '/app.js')),
+		]);
+	}
+
+	function prepareUnityViewer() {
+		var unityLoaderPath = PREFIX + '/unity/Build/UnityLoader.js';
+		return importScript(new URL(unityLoaderPath));
 	}
 
 	function initUnity() {
@@ -203,7 +262,12 @@ function init() {
 
 			UnityUtil.setAPIKey(apiKey);
 
-			UnityUtil.loadUnity('unity', PREFIX + '/unity/Build/unity.json', 2130706432 / 10);
+			const viewer = (window as any).config.viewer;
+			if (viewer == 'unity') {
+				UnityUtil.loadUnity('unity', PREFIX + '/unity/Build/unity.json', 2130706432 / 10);
+			} else if (viewer == 'unreal') {
+				UnityUtil.loadUnreal('unity', (window as any).config.unrealConfig);
+			}
 
 			// UnityUtil.overrideMeshColor(account, model, meshIds, color)
 
