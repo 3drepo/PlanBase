@@ -1,7 +1,7 @@
 {
-	"teamspaceId": "sebjf",
-	"modelId": "e250c0b0-b8b0-11eb-bf20-01fd9ddbaae4",
-	"apiKey": "4aad19baba64dc27a004cf09dd86129b",
+	"teamspaceId": "PlanBase",
+	"modelId": "b1974e30-7dc3-11eb-866f-9178b76b7801",
+	"apiKey": "cedfaddbd5431f26b1357a719408934b",
 	"showTitleBar": true,
 	"showNavBar": true,
 	"enableEmailPostcode": true,
@@ -9,12 +9,5 @@
 	"showNarrativePins": true,
 	"showThumbnails": true,
 	"showExplorer": true,
-	"baseApiUrl": "https://staging.dev.3drepo.io/api",
-	"viewer": "unreal",
-	"unrealConfig": {
-		"baseResourcesUrl": "http://localhost",
-		"adapterUrl":  "https://webrtc.github.io/adapter/adapter-latest.js",
-		"serverUrl": "ws://localhost/",
-		"autoConnect": false
-	}
+	"baseApiUrl": "https://api3.www.3drepo.io/api"
 }
