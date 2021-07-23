@@ -84,6 +84,7 @@ export default Vue.extend({
 
 declare var UnityUtil: any;
 declare var viewer: any;
+declare var createPixelStreamingInstance: any;
 
 var PREFIX = 'https://www.3drepo.io';
 
@@ -266,7 +267,7 @@ function init() {
 			if (viewer == 'unity') {
 				UnityUtil.loadUnity('unity', PREFIX + '/unity/Build/unity.json', 2130706432 / 10);
 			} else if (viewer == 'unreal') {
-				UnityUtil.loadUnreal('unity', (window as any).config.unrealConfig);
+				UnityUtil.loadUnreal('unity', createPixelStreamingInstance, (window as any).config.unrealConfig);
 			}
 
 			// UnityUtil.overrideMeshColor(account, model, meshIds, color)
